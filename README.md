@@ -23,7 +23,7 @@ On the command line you can run ``machine-gettext`` with the following arguments
 
     * ``non-fuzzy-overwrite``:  Doesn't mark added translations as fuzzy; overwrites existing translations if they are marked as ``fuzzy``
 
-The following example writes all missing translations as non-fuzzy msgstrs into ``messages``; overwrites fuzzy messages:
+The following example writes all missing translations as non-fuzzy msgstrs into ``messages`` and overwrites fuzzy messages:
 
 ```
 machine-gettext -i=messages.po -o=messages.po -m=non-fuzzy-overwrite
@@ -61,7 +61,9 @@ Possible improvement are, for example:
 
 * allow integration with alternative translation services,
 
-* better support for interpolation and pluralization support,
+* better support for interpolation and pluralization,
+
+* support list of terms that shouldn't be translated (for example: product names),
 
 * translation memory support.
 
