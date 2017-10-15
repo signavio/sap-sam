@@ -70,4 +70,5 @@ Possible improvement are, for example:
 ## Authors
 
 * Timotheus Kampik - [@TimKam](https://github.com/TimKam)
+* Oleg Yarin - [@monapasan](https://github.com/monapasan)
 
