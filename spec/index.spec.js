@@ -73,7 +73,7 @@ describe('translateGettext()', () => {
         })
         it('should translate fuzzy, non-empty entries and "unfzz" them', () => {
             expect(fuzzyEntry.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
-            expect(fuzzyEntry.comments.flag).toEqual('fuzzy')
+            expect(fuzzyEntry.comments.flag).not.toEqual('fuzzy')
         })
         it('should not newly translate non-empty entries', () => {
             expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
