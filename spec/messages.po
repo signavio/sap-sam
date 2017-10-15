@@ -27,3 +27,7 @@ msgstr "ONLY_IF_UNFUZZY"
 #, fuzzy, c-format
 msgid "fuzzy test comment"
 msgstr "ONLY_IF_UNFUZZY"
+
+#, c-format, fuzzy
+msgid "fuzzy suceeds other comment"
+msgstr "ONLY_IF_UNFUZZY"

@@ -6,6 +6,7 @@ describe('translateGettext()', () => {
     let nonFuzzyEntry
     let fuzzyEntryComment
     let fuzzyEntry
+    let entryFuzzyAfterOtherComment
 
     const setupTranslations = (input, mode, callback) => {
         translateGettext(input, mode, processedPoFile => {
@@ -14,6 +15,7 @@ describe('translateGettext()', () => {
             nonFuzzyEntry = processedTranslations['Control']
             fuzzyEntryComment = processedTranslations['fuzzy test comment']
             fuzzyEntry = processedTranslations['Copy all contents']
+            entryFuzzyAfterOtherComment = processedTranslations['fuzzy suceeds other comment']
             callback()
         })
     }
@@ -73,10 +75,14 @@ describe('translateGettext()', () => {
         })
         it('should translate fuzzy, non-empty entries and "unfzz" them', () => {
             expect(fuzzyEntry.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
-            expect(fuzzyEntry.comments.flag).toEqual('fuzzy')
+            expect(fuzzyEntry.comments.flag).not.toEqual('fuzzy')
         })
         it('should not newly translate non-empty entries', () => {
             expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
+        })
+        it('should handle fuzzy entries with futher comments correctly', () => {
+            expect(fuzzyEntryComment.comments.flag).not.toEqual('fuzzy')
+            expect(entryFuzzyAfterOtherComment.comments.flag).not.toEqual('fuzzy')
         })
     })
 
