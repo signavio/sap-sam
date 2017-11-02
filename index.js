@@ -29,4 +29,4 @@ const callback = () => {
     console.log(`writing to file: ${argv.output}`)
 }
 
-translateGettext(argv.input, argv.mode, callback, argv.output)
+translateGettext(argv.input, argv.fuzzy, argv.overwrite, callback, argv.output)
