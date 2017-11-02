@@ -8,32 +8,115 @@ describe('translateGettext()', () => {
     let fuzzyEntry
     let entryFuzzyAfterOtherComment
 
-    const setupTranslations = (input, mode, callback) => {
-        translateGettext(input, mode, processedPoFile => {
+    const setupTranslations = (input, fuzzy, overwrite, callback) => {
+        translateGettext(input, fuzzy, overwrite, processedPoFile => {
             processedTranslations = processedPoFile.translations['']
             emptyEntry = processedTranslations['Configure']
             nonFuzzyEntry = processedTranslations['Control']
             fuzzyEntryComment = processedTranslations['fuzzy test comment']
             fuzzyEntry = processedTranslations['Copy all contents']
-            entryFuzzyAfterOtherComment = processedTranslations['fuzzy suceeds other comment']
+            entryFuzzyAfterOtherComment =
+                processedTranslations['fuzzy suceeds other comment']
             callback()
         })
     }
 
-    describe('`fuzzy` mode', () => {
+    describe('`fuzzy` = true and `overwrite` = true', () => {
         beforeAll(done => {
-            setupTranslations('./spec/messages.po', 'fuzzy', done)
+            setupTranslations('./spec/messages.po', true, true, done)
         })
 
         it('should translate empty entry and mark it as fuzzy', () => {
             expect(emptyEntry.msgstr[0].length).not.toEqual(0)
             expect(emptyEntry.comments.flag).toEqual('fuzzy')
         })
-        it('should not newly translate fuzzy, non-empty entry', () => {
+        it('should translate and overwrite fuzzy entry but leave fuzzy flag', () => {
+            expect(fuzzyEntry.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
+            expect(fuzzyEntry.comments.flag).toEqual('fuzzy')
+        })
+
+        it('should translate and overwrite fuzzy, non-empty entry with a comment', () => {
+            expect(fuzzyEntryComment.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
+            expect(fuzzyEntryComment.comments.flag).toEqual('fuzzy, c-format')
+        })
+        it('should not newly translate non-empty entry', () => {
+            expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
+        })
+    })
+
+    describe('`fuzzy` = true and `overwrite` = false', () => {
+        beforeAll(done => {
+            setupTranslations('./spec/messages.po', true, false, done)
+        })
+
+        it('should translate empty entry and mark it as fuzzy', () => {
+            expect(emptyEntry.msgstr[0].length).not.toEqual(0)
+            expect(emptyEntry.comments.flag).toEqual('fuzzy')
+        })
+
+        it('should not overwrite fuzzy entry', () => {
             expect(fuzzyEntry.msgstr[0]).toEqual('ONLY_IF_UNFUZZY')
             expect(fuzzyEntry.comments.flag).toEqual('fuzzy')
         })
-        it('should not newly translate fuzzy, non-empty entry with comment', () => {
+
+        it('should not translate fuzzy, non-empty entry with a comment', () => {
+            expect(fuzzyEntryComment.msgstr[0]).toEqual('ONLY_IF_UNFUZZY')
+            expect(fuzzyEntryComment.comments.flag).toEqual('fuzzy, c-format')
+        })
+
+        it('should not newly translate non-empty entry', () => {
+            expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
+        })
+    })
+
+    describe('`fuzzy` = false and `overwrite` = true', () => {
+        beforeAll(done => {
+            setupTranslations('./spec/messages.po', false, true, done)
+        })
+
+        it('should translate empty entry and not mark it as fuzzy', () => {
+            expect(emptyEntry.msgstr[0].length).not.toEqual(0)
+            expect(emptyEntry.comments).toBe(undefined)
+        })
+
+        it('should overwrite fuzzy entry and remove fuzzy flag', () => {
+            expect(fuzzyEntry.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
+            expect(fuzzyEntry.comments.flag).not.toEqual('fuzzy')
+        })
+
+        it('should overwrite fuzzy entry with a comment and remove fuzzy flag', () => {
+            expect(fuzzyEntryComment.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
+            expect(fuzzyEntryComment.comments.flag).toEqual('c-format')
+        })
+
+        it('should not newly translate non-empty entry', () => {
+            expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
+        })
+
+        it('should handle fuzzy entries with futher comments correctly', () => {
+            expect(fuzzyEntryComment.comments.flag).not.toEqual('fuzzy')
+            expect(entryFuzzyAfterOtherComment.comments.flag).not.toEqual(
+                'fuzzy'
+            )
+        })
+    })
+
+    describe('`fuzzy` = false and `overwrite` = false', () => {
+        beforeAll(done => {
+            setupTranslations('./spec/messages.po', false, false, done)
+        })
+
+        it('should translate empty entry and not mark it as fuzzy', () => {
+            expect(emptyEntry.msgstr[0].length).not.toEqual(0)
+            expect(emptyEntry.comments).toBe(undefined)
+        })
+
+        it('should not overwrite fuzzy entry and leave fuzzy flag', () => {
+            expect(fuzzyEntry.msgstr[0]).toEqual('ONLY_IF_UNFUZZY')
+            expect(fuzzyEntry.comments.flag).toEqual('fuzzy')
+        })
+
+        it('should not overwrite fuzzy, non-empty entry with a comment', () => {
             expect(fuzzyEntryComment.msgstr[0]).toEqual('ONLY_IF_UNFUZZY')
             expect(fuzzyEntryComment.comments.flag).toEqual('fuzzy, c-format')
         })
@@ -41,54 +124,15 @@ describe('translateGettext()', () => {
             expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
         })
     })
-    
-    describe('`non-fuzzy` mode', () => {
-        beforeAll(done => {
-            setupTranslations('./spec/messages.po', 'non-fuzzy', done)
-        })
-
-        it('should translate empty entries (and not mark them as fuzzy)', () => {
-            expect(emptyEntry.msgstr[0].length).not.toEqual(0)
-            expect(emptyEntry.comments).toBe(undefined)
-        })
-        it('should not newly translate fuzzy, non-empty entry', () => {
-            expect(fuzzyEntry.msgstr[0]).toEqual('ONLY_IF_UNFUZZY')
-            expect(fuzzyEntry.comments.flag).toEqual('fuzzy')
-        })
-        it('should not newly translate fuzzy, non-empty entry with comment', () => {
-            expect(fuzzyEntryComment.msgstr[0]).toEqual('ONLY_IF_UNFUZZY')
-            expect(fuzzyEntryComment.comments.flag).toEqual('fuzzy, c-format')
-        })
-        it('should not newly translate non-empty entries', () => {
-            expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
-        })
-    })
-    
-    describe('`non-fuzzy-overwrite` mode', () => {
-        beforeAll(done => {
-            setupTranslations('./spec/messages.po', 'non-fuzzy-overwrite', done)
-        })
-
-        it('should translate empty entries (and not mark them as fuzzy)', () => {
-            expect(emptyEntry.msgstr[0].length).not.toEqual(0)
-            expect(emptyEntry.comments).toBe(undefined)
-        })
-        it('should translate fuzzy, non-empty entries and "unfzz" them', () => {
-            expect(fuzzyEntry.msgstr[0]).not.toEqual('ONLY_IF_UNFUZZY')
-            expect(fuzzyEntry.comments.flag).not.toEqual('fuzzy')
-        })
-        it('should not newly translate non-empty entries', () => {
-            expect(nonFuzzyEntry.msgstr[0]).toEqual('DONT_TRANSLATE_AGAIN')
-        })
-        it('should handle fuzzy entries with futher comments correctly', () => {
-            expect(fuzzyEntryComment.comments.flag).not.toEqual('fuzzy')
-            expect(entryFuzzyAfterOtherComment.comments.flag).not.toEqual('fuzzy')
-        })
-    })
 
     describe('edge cases', () => {
         beforeAll(done => {
-            setupTranslations('./spec/messages_translated.po', 'non-fuzzy', done)
+            setupTranslations(
+                './spec/messages_translated.po',
+                false,
+                false,
+                done
+            )
         })
         it('should terminate given a .po file with only translated messages', () => {
             expect(emptyEntry).toEqual(undefined)
