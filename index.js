@@ -18,7 +18,7 @@ const argv = require('yargs')
     .describe('in', 'Relative path to input file')
     .alias('out', 'Relative path to output file')
     .describe('f', 'Mark added translation as fuzzy')
-    .describe('o', 'Overwrite existing translations which are marked as fuzzy')
+    .describe('o', 'Overwrite existing translations if they are marked as fuzzy')
     .demandOption(['input', 'output'])
     .help('h')
     .alias('h', 'help').argv
