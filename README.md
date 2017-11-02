@@ -11,17 +11,13 @@ You can use ``machine-gettext`` via the command line or require it in a JavaScri
 ### Command line
 On the command line you can run ``machine-gettext`` with the following arguments:
 
-* ``-i, --input``: Relative path to input file
+* ``-in, --input``: Relative path to input file
 
-* ``-o, --output``: Relative path to output file
+* ``-out, --output``: Relative path to output file
 
-* ``-m, --mode``: one of the following:
+* ``-f, --fuzzy``: If specified, mark added translation as fuzzy
 
-    *  ``fuzzy`` (default): Marks all added translations as fuzzy; ignores existing translations, even if they are marked as ``fuzzy``
-
-    *  ``non-fuzzy``: Doesn't mark added translations as fuzzy; ignores existing translations, even if they are marked as ``fuzzy``
-
-    * ``non-fuzzy-overwrite``:  Doesn't mark added translations as fuzzy; overwrites existing translations if they are marked as ``fuzzy``
+* ``-o, --overwrite``: If specified, overwrite existing fuzzy translations
 
 The following example writes all missing translations as non-fuzzy msgstrs into ``messages`` and overwrites fuzzy messages:
 
@@ -34,7 +30,9 @@ You can also require the module as ``translateGettext`` in a JavaScript file and
 
 * ``input`` (string): Relative path to input file
 
-* ``mode`` (string): See above (command line arguments)
+* ``markAsFuzzy`` (boolean): If ``true``, mark added translation as fuzzy
+
+* ``overwrite`` (boolean): If ``true``, overwrite existing fuzzy translations
 
 * ``callback`` (function): Executed after all messages have been processed. Takes a [gettext-parser](https://github.com/smhg/gettext-parser).po file object as its argument.
 
@@ -46,10 +44,12 @@ The following example loads the content of ``./messages.po``, adds missing trans
 const translateGettext = require('translateGettext')
 
 poFile = parser.po.parse(fileSystem.readFileSync('./messages.po'))
-translateGettext(poFile, 'fuzzy', processedPoFile => {
+translateGettext(poFile, false, true, processedPoFile => {
     console.log(processedPoFile)
 })
 ```
+
+**Note:** The example code marks the new translations as fuzzy and doesn't overwrite existing fuzzy translations.
 
 ## Contribution
 Contributions are welcome.
