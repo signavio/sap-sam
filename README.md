@@ -44,7 +44,7 @@ The following example loads the content of ``./messages.po``, adds missing trans
 const translateGettext = require('translateGettext')
 
 poFile = parser.po.parse(fileSystem.readFileSync('./messages.po'))
-translateGettext(poFile, false, true, processedPoFile => {
+translateGettext(poFile, true, false, processedPoFile => {
     console.log(processedPoFile)
 })
 ```
