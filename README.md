@@ -1,4 +1,6 @@
 # machine-gettext
+[![Build Status](https://travis-ci.org/signavio/machine-gettext.svg?branch=8-integrate-travis-ci)](https://travis-ci.org/signavio/machine-gettext)
+
 ``machine-gettext`` is a node module for adding machine translations to [GNU gettext .po files](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html).
 To translate content, it uses the [DeepL](https://www.deepl.com/translator) cloud service.
 
