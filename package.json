@@ -1,6 +1,6 @@
 {
   "name": "@pitcher/machine-gettext",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add machine translations to gettext .po files",
   "main": "index.js",
   "repository": {
