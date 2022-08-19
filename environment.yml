@@ -1,0 +1,24 @@
+name: sapsam
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  # PYTHON AND JUPYTER BASICS
+  - pip
+  - ipython
+  - tqdm
+  - joblib
+  - jupyterlab
+  # DATA SCIENCE BASICS
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  # NLP
+  - spacy=3.4.1
+  - wordcloud=1.8.2.2
+  - stringcase=1.2.0
+  - pip:
+      - -e .  # install sapsam project in editable mode
+      - spacy_langdetect  # not available in conda-forge
+      - language_data

@@ -1,0 +1,111 @@
+{
+  "example_processes": [
+    {
+      "batch_name": "1st batch",
+      "content": [
+        "Lieferung-zu-Bezahlung",
+        "Bestellung-zu-Lieferung",
+        "BANF-zu-Bestellung",
+        "Wertschöpfungskette: Beschaffung",
+        "Purchase Order-to-Delivery",
+        "Delivery-to-Payment",
+        "Purchase Requisition-to-Purchase Order",
+        "Value chain: Procurement"
+      ],
+      "comment": ""
+    },
+
+    {
+      "batch_name": "2nd batch",
+      "content": [
+        "Lieferung-zu-Bezahlung",
+        "Bestellung-zu-Lieferung",
+        "BANF-zu-Bestellung",
+        "Wertschöpfungskette: Beschaffung",
+        "Purchase Order-to-Delivery",
+        "Delivery-to-Payment",
+        "Purchase Requisition-to-Purchase Order",
+        "Value chain: Procurement"
+      ],
+      "comment": "2nd batch, should be same names as 1st"
+    },
+    {
+      "batch_name": "3rd batch A",
+      "content": [
+        "Ebene 1 - Prozesslandkarte ACME AG",
+        "Ebene 2 - Prozessbereich: Auftragsdurchführung",
+        "Ebene 2 - Prozessbereich: Produktentwicklung",
+        "Teile beschaffen",
+        "Wareneingang",
+        "Menge und Qualität überprüfen",
+        "Ebene  2 - Prozessbereich: Personalwesen",
+        "Arbeitsmittel beschaffen",
+        "Bewerbungseingang",
+        "Mitarbeiter Onboarding",
+        "Bewerber prüfen",
+        "Level 1 - Value Chain ACME AG",
+        "Level 2 - Process Area: Product Development",
+        "Level 2 - Process Area: Order Processing",
+        "Procure parts",
+        "Check quantity and quality",
+        "Receipt of Goods",
+        "Level  2 - Process Area: Human Resources",
+        "Receipt of Application",
+        "Verify applicant",
+        "Employee Onboarding",
+        "Procurement of Work Equipment",
+        "Niveau 1 \u2013 Chaine de valeur d'ACME AG",
+        "Niveau 2 - Processus des Ressources Humaines",
+        "Donner l'équipement de travail",
+        "Vérifier le candidat",
+        "Installation d'un employé",
+        "Réception d'une candidature",
+        "Niveau 2 - Processus de développement produit",
+        "Niveau 2 - Processus de gestion des commandes",
+        "Contrôler la quantité et la qualité",
+        "Commande de pièces",
+        "Réception de biens"
+      ],
+      "comment": "3rd batch A, new!"
+    },
+    {
+      "batch_name": "3rd batch B",
+      "content": [
+        "Ebene 1 - Prozesslandkarte ACME AG",
+        "Ebene 2 - Prozessbereich: Auftragsdurchführung",
+        "Ebene 2 - Prozessbereich: Produktentwicklung",
+        "Teile beschaffen",
+        "Wareneingang",
+        "Menge und Qualität überprüfen",
+        "Ebene  2 - Prozessbereich: Personalwesen",
+        "Arbeitsmittel beschaffen",
+        "Bewerbungseingang",
+        "Mitarbeiter Onboarding",
+        "Bewerber prüfen",
+        "Level 1 - Value Chain ACME AG",
+        "Level 2 - Process Area: Product Development",
+        "Level 2 - Process Area: Order Processing",
+        "Procure parts",
+        "Check quantity and quality",
+        "Receipt of Goods",
+        "Level  2 - Process Area: Human Resources",
+        "Receipt of Application",
+        "Verify applicant",
+        "Employee Onboarding",
+        "Procurement of Work Equipment",
+        "Niveau 1 \u2013 Chaine de valeur d'ACME AG",
+        "Niveau 2 - Processus des Ressources Humaines",
+        "Donner l'équipement de travail",
+        "Vérifier le candidat",
+        "Installation d'un employé",
+        "Réception d'une candidature",
+        "Niveau 2 - Processus de développement produit",
+        "Niveau 2 - Processus de gestion des commandes",
+        "Contrôler la quantité et la qualité",
+        "Commande de pièces",
+        "Réception de biens"
+      ],
+      "comment": "3rd batch B, localized, should be same as 3rd batch A"
+    }
+  ]
+}
