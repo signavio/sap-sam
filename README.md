@@ -2,7 +2,7 @@
 
 This repository contains the source code for the paper `SAP Signavio Academic Models: A Large Process Model Dataset` by Diana Sola, Christian Warmuth, Bernhard Schäfer, Peyman Badakhshan, Jana-Rebecca Rehse, and Timotheus Kampik.
 
-Link to the paper: tba.
+Link to the paper: https://arxiv.org/abs/2208.12223 (pre-print)
 
 Link to the dataset: https://zenodo.org/record/7012043 
 
