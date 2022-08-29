@@ -42,7 +42,30 @@ SAP grants to Recipient a non-exclusive copyright license to the Model Collectio
 
 ## Citing SAP-SAM
 
-tba.
+@misc{SAP-SAM-paper,
+  doi = {10.48550/ARXIV.2208.12223},
+  url = {https://arxiv.org/abs/2208.12223},
+  author = {Sola, Diana and Warmuth, Christian and Schäfer, Bernhard and Badakhshan, Peyman and Rehse, Jana-Rebecca and Kampik, Timotheus},
+  keywords = {Other Computer Science (cs.OH), Software Engineering (cs.SE), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  title = {SAP Signavio Academic Models: A Large Process Model Dataset},
+  publisher = {arXiv},
+  year = {2022},
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+
+or 
+
+@dataset{SAP-SAM-dataset,
+  author       = {Kampik, Timotheus and Warmuth, Christian and Sola, Diana and Schäfer, Bernhard and Axworthy, Liz and Ivarsson, Erica and
+                  Ouda, Karim and Eickhoff, David},
+  title        = {SAP Signavio Academic Models},
+  month        = aug,
+  year         = 2022,
+  publisher    = {Zenodo},
+  version      = {0.5.1},
+  doi          = {10.5281/zenodo.6964944},
+  url          = {https://doi.org/10.5281/zenodo.6964944}
+}
 
 ## Setup
 
