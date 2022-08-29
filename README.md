@@ -42,6 +42,7 @@ SAP grants to Recipient a non-exclusive copyright license to the Model Collectio
 
 ## Citing SAP-SAM
 
+```BibTeX
 @misc{SAP-SAM-paper,
   doi = {10.48550/ARXIV.2208.12223},
   url = {https://arxiv.org/abs/2208.12223},
@@ -52,9 +53,9 @@ SAP grants to Recipient a non-exclusive copyright license to the Model Collectio
   year = {2022},
   copyright = {arXiv.org perpetual, non-exclusive license}
 }
-
+```
 or 
-
+```BibTeX
 @dataset{SAP-SAM-dataset,
   author       = {Kampik, Timotheus and Warmuth, Christian and Sola, Diana and Schäfer, Bernhard and Axworthy, Liz and Ivarsson, Erica and
                   Ouda, Karim and Eickhoff, David},
@@ -66,7 +67,7 @@ or
   doi          = {10.5281/zenodo.6964944},
   url          = {https://doi.org/10.5281/zenodo.6964944}
 }
-
+```
 ## Setup
 
 You need to download the [dataset](insert link) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
