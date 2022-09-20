@@ -87,9 +87,9 @@ conda env create -f environment-lock.yml
 
 ## Getting started
 
-We provide a [tutorial Jupyter Notebook](https://github.com/signavio/sap-sam-dummy/blob/main/notebooks/1_tutorial.ipynb) that illustrates the dataset format in more detail and shows how to use the csv parsers developed in `./src`.
+We provide a [tutorial Jupyter Notebook](https://github.com/signavio/sap-sam/blob/main/notebooks/1_tutorial.ipynb) that illustrates the dataset format in more detail and shows how to use the csv parsers developed in `./src`.
 
-The [properties Jupyter Notebook](https://github.com/signavio/sap-sam-dummy/blob/main/notebooks/2_properties.ipynb) gives an overview of selected properties of the dataset. 
+The [properties Jupyter Notebook](https://github.com/signavio/sap-sam/blob/main/notebooks/2_properties.ipynb) gives an overview of selected properties of the dataset. 
 
 ## Dataset Format
 
