@@ -70,7 +70,7 @@ or
 ```
 ## Setup
 
-You need to download the [dataset](insert link) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
+You need to download the [dataset](https://zenodo.org/record/7012043#.Y9jQV3bMKPo) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
 
 We provide two [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/index.html) environment.yml files that can be used to create a new environment and install the required dependencies:
 - `environment.yml`: contains the abstract dependencies (pandas, numpy, ...).
