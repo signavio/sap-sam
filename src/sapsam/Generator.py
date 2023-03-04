@@ -2,7 +2,7 @@ import json, requests
 from conf import system_instance
 from sapsam.SignavioAuthenticator import SignavioAuthenticator
 
-class ImageGenerator:
+class Generator:
     """
     Class that generates images based on JSON or XML representations
     """
@@ -115,7 +115,70 @@ class ImageGenerator:
             PNG representation of the diagram
         """
         return self.generate_representation(name, data, namespace, 'png', deletes)
-    
+
+    def generate_dmn_xml(self, name, data, namespace, deletes=True):
+        """Uploads a diagram (JSON format) to the SAP-SAM folder in Signavio Process Manager
+            and returns a diagram representation as DMN 2.x XML.
+
+        Args:
+            name (str): Name of the diagram
+            data (str): JSON representation of the diagram
+            namespace (str): Namespace of the diagram
+            deletes (bool): If True, deletes diagram after content has
+                been generated and returned. Default: True
+
+        Returns:
+            DMN 1.X XML representation of the diagram, or None, if no XML could be fetched
+        """
+
+        #Authenticate
+        auth_data = SignavioAuthenticator.authenticate()
+        model_url = system_instance + '/p/model'
+        cookies = {'JSESSIONID': auth_data['jsesssion_ID'], 'LBROUTEID': auth_data['lb_route_ID']}
+        headers = {'Accept': 'application/json', 'x-signavio-id': auth_data['auth_token']}
+        data = {
+            'parent': '/directory/' + self._setup_folder(),
+            'name': name,
+            'namespace': namespace,
+            'json_xml': data
+        }
+
+        #========== Initially Upload the Model ==========
+        create_diagram_request = requests.post(model_url, cookies=cookies, headers=headers, data=data)
+        result = json.loads(create_diagram_request.content)
+
+        #Fetch the model id from the Signavio Process Manager
+        model_id = result['href'].replace('/model/', '')
+
+        #========== Step 1: Generate Download Link to last revision ==========
+        model_url = system_instance + '/p/model'
+
+        #fetch download link
+        rep_request = requests.get(
+            f'{model_url}/{model_id}/dmn',
+            cookies=cookies,
+            headers=headers)
+
+        json_rep_request = json.loads(rep_request.content)
+
+        #========== Step 2: Download the XML representation ==========
+        return_value = None
+        if not 'rep' in json_rep_request:
+            return_value = None
+        else:
+            if (json_rep_request['rep']['success']):
+                download_url = json_rep_request['rep']['downloadUrl']
+                responseXML = requests.get(download_url, cookies=cookies, headers=headers)
+                return_value = responseXML.content
+            else:
+                return_value = None
+
+        if deletes:
+            self._delete_diagram(model_id)
+
+        return return_value
+
+
     def generate_xml(self, name, data, namespace, deletes=True):
         """Uploads a diagram to the SAP-SAM folder in Signavio Process Manager
         and returns a diagram representation as BPMN 2.x XML.
