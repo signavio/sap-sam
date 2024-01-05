@@ -17,7 +17,7 @@ if pip --version &>/dev/null; then
     installed_packages=$((installed_packages + 1))
 else
     echo "pip not installed"
-    echo "try installing pip like for example (on macOS): brew install pip"
+    echo "try installing pip with for example (on macOS): brew install pip"
     echo "exiting setup script..."
     exit 1
 fi
@@ -29,6 +29,7 @@ if command -v python3 &>/dev/null; then
     installed_packages=$((installed_packages + 1))
 else
     echo "python3 not installed"
+    echo "try installing python3 with for example (on macOS): brew install python3"
     echo "exiting setup script..."
     exit 1
 fi
@@ -51,6 +52,7 @@ if pip list | grep jupyter &>/dev/null; then
     installed_packages=$((installed_packages + 1))
 else
     echo "jupyter module not installed"
+    echo "try installing jupyter with for example: pip install jupyter notebook"
     echo "exiting setup script..."
     exit 1
 fi
