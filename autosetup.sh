@@ -22,13 +22,16 @@ else
     exit 1
 fi
 
-# checks for python3
+# checks for python
 required_packages=$((required_packages + 1))
-if command -v python3 &>/dev/null; then
+if command -v python &>/dev/null; then
+    echo -e "\xE2\x9C\x94 python installed..."
+    installed_packages=$((installed_packages + 1))
+elif command -v python3 &>/dev/null; then
     echo -e "\xE2\x9C\x94 python3 installed..."
     installed_packages=$((installed_packages + 1))
 else
-    echo "python3 not installed"
+    echo "python not installed"
     echo "try installing python3 with for example (on macOS): brew install python3"
     echo "exiting setup script..."
     exit 1
@@ -74,7 +77,7 @@ echo -e "${GREEN}$installed_packages out of $required_packages pre-required pack
 if [ -d "$venv_name" ]; then
     echo "virtual environment '$venv_name' already exists"
 else
-    python3.8 -m venv "$venv_name"
+    python3 -m venv "$venv_name"
     echo "virtual environment '$venv_name' created"
 fi
 
