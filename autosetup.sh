@@ -82,7 +82,17 @@ else
 fi
 
 # activates the virtual environment for packages installation
-source "$venv_name/bin/activate"
+source "$venv_name/bin/activate" &>/dev/null
+
+if [ $? -ne 0 ]; then
+	echo "unable to activate virtual environment"
+	echo "Debian/Ubuntu users might need to install the python3-venv package separately."
+	echo "exiting setup script..."
+    	exit 1
+else
+	echo "${GREEN}\xE2\x9C\x94${RESET_PRINT} environment is active"
+fi
+
 echo "updating pip..."
 pip install --upgrade pip
 
@@ -152,3 +162,4 @@ echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} kernel set"
 
 # end message
 echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} setup done"
+
