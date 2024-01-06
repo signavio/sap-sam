@@ -72,7 +72,9 @@ or
 
 You need to download the [dataset](https://zenodo.org/record/7012043#.Y9jQV3bMKPo) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
 
-For macOS users, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
+Primarily for macOS users, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
+
+The script will also work on Linux or Windows with a bash emulator, albeit with possible minor variations.
 
 To run the script, go to the root of the cloned repository, then enter this line in the terminal:
 ```shell
