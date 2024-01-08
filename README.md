@@ -72,6 +72,31 @@ or
 
 You need to download the [dataset](https://zenodo.org/record/7012043#.Y9jQV3bMKPo) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
 
+Primarily for macOS users, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
+
+The script will also work on Linux or Windows with a bash emulator, albeit with possible minor variations.
+
+To run the script, go to the root of the cloned repository, then enter this line in the terminal:
+```shell
+./autosetup.sh
+```
+
+The script will verify if pre-requisite packages are installed, create the virtual environment, and install all necessary dependencies.
+After executing the script, type:
+```shell
+source venv_sapsam/bin/activate
+```
+This will activate the virtual environment. To open the project, simply type:
+```shell
+jupyter notebook
+```
+To exit the virtual environment after exiting jupyter notebook, type:
+```shell
+deactivate
+```
+
+Alternatively, a **conda** setup is possible.
+
 We provide two [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/index.html) environment.yml files that can be used to create a new environment and install the required dependencies:
 - `environment.yml`: contains the abstract dependencies (pandas, numpy, ...).
 - `environment-lock.yml`: contains versions for all dependencies and the transitive dependencies to ensure reproducible results.

@@ -5,6 +5,9 @@ __MACOSX/
 # exclude data from source control by default
 /data/
 
+# exclude venv setup
+/venv_sapsam
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
