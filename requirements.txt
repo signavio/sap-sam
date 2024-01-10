@@ -11,5 +11,5 @@ thinc==8.1.12
 spacy==3.7.2
 stringcase==1.2.0
 ipykernel==6.28.0
-pydantic==1.9.2
+pydantic==2.5.3
 spacy_langdetect==0.1.2
