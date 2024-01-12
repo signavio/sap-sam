@@ -1,5 +1,5 @@
 matplotlib==3.8.2
-pillow==10.1.0
+pillow==10.2.0
 pandas==1.4.3
 numpy==1.26.3
 toml==0.10.2
