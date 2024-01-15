@@ -17,14 +17,14 @@ min_notebook_version="7.0.6"
 # checks for pip and updates if necessary
 required_packages=$((required_packages + 1))
 echo "starting setup..."
-if pip --version &>/dev/null; then
+if pip3 --version &>/dev/null || pip --version &>/dev/null; then
     echo "      checking for pip minimum version requirement..."
-    pip_version=$(pip --version | awk '{print $2}')
+    pip_version=$(pip3 --version | awk '{print $2}')
     if [[ "$(printf '%s\n' "$min_pip_version" "$pip_version" | sort -V | head -n1)" == "$min_pip_version" ]]; then
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pip installed..."
     else
         echo "updating pip..."
-        pip install --upgrade pip
+        pip3 install --upgrade pip
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pip installed..."
     fi
     installed_packages=$((installed_packages + 1))
