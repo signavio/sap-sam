@@ -69,10 +69,10 @@ class BpmnModelParser:
     def _parse_df_row(self, row_tuple):
         model_dict = json.loads(row_tuple.model_json)
         elements = self._get_elements_flat(model_dict)
-        return (
-            pd.DataFrame.from_records(elements)
-            .assign(model_id=row_tuple.model_id)
-        )
+        df = pd.DataFrame.from_records(elements)
+        df["model_id"] = row_tuple.model_id
+        df["name"] = row_tuple.name
+        return df
 
     def _get_elements_flat(self, model_dict) -> List[Dict[str, str]]:
         """

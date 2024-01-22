@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 
+
 def filter_example_processes(dataset):
     with open("../src/sapsam/prefilled_example_processes.json") as data_file:    
         examples = json.load(data_file)
@@ -40,7 +41,7 @@ def filter_namespaces(dataset, value=None, threshold=None):
 
 filters = {
     'example_processes': filter_example_processes,
-    'namespaces': filter_namespaces
+    'namespaces': filter_namespaces,
 }
 
 class DataFilter:
@@ -64,4 +65,5 @@ class DataFilter:
             raise ValueError(f"Invalid filter key: {filter_key}\n\
 Available filters:\n\
     - example_processes\n\
-    - namespaces <value> (optional) <threshold>")
+    - namespaces <value> (optional) <threshold>\n\
+    - empty_models")
