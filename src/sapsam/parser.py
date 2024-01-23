@@ -34,7 +34,7 @@ def parse_csv_raw(csv_path: Path, **kwargs):
 def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
     if csv_paths is None:
         csv_paths = get_csv_paths()
-    _logger.info("Starting to parse %d cvs excluding model json", len(csv_paths))
+    _logger.info("Starting to parse %d csv excluding model json", len(csv_paths))
 
     # exclude "Model JSON" column to speed up import and reduce memory usage
     dfs = [parse_csv_raw(p, usecols=lambda s: s != "Model JSON") for p in tqdm(csv_paths)]
@@ -70,6 +70,19 @@ class BpmnModelParser:
         model_dict = json.loads(row_tuple.model_json)
         elements = self._get_elements_flat(model_dict)
         df = pd.DataFrame.from_records(elements)
+
+        if 'glossary_link_id' in df.columns:
+            def convert_glossary_ids(value):
+                if pd.notna(value):
+                    value = str(value)
+                    value = value.replace("[", "")\
+                        .replace("]", "")\
+                        .replace("/glossary/", "")\
+                        .replace("'", "")
+                return value
+        
+            df["glossary_link_id"] = df["glossary_link_id"].apply(convert_glossary_ids)
+
         df["model_id"] = row_tuple.model_id
         df["name"] = row_tuple.name
         return df
@@ -98,6 +111,7 @@ class BpmnModelParser:
                 "element_id": element["resourceId"],
                 "category": element["stencil"].get("id") if "stencil" in element else None,
                 "label": element["properties"].get("name"),
+                "glossary_link_id": element.get("glossaryLinks", {}).get("name", None)
             }
             if self.parse_parent:
                 record["parent"] = element.get("parent")

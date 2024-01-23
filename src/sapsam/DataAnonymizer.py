@@ -1,3 +1,4 @@
+import sys
 import requests
 import time
 from SignavioAuthenticator import *
@@ -58,6 +59,15 @@ def change_mod_names(model_ids: list, mod_url, cookies, headers):
         time.sleep(1.2)
 
 def main():
+    if len(sys.argv) < 2:
+        print("Script requires an argument: 'rename' or 'fetch'")
+        return
+    if sys.argv[1] == 'rename' or sys.argv[1] == 'fetch':
+        pass
+    else:
+        print("Unknown argument")
+        return
+
     auth_data = SignavioAuthenticator.authenticate()
     dir_url = system_instance + '/p/directory'
     mod_url = system_instance + '/p/model'
@@ -76,20 +86,28 @@ def main():
     response = get_dir_meta_request.json()
     root_dir_ids = get_root_dir_ids(response)
 
-    list_all_ids = requests.get(
-        dir_url + '/' + root_dir_ids[target_dir_name],
-        cookies=cookies,
-        headers=headers)
-    response_status = list_all_ids.status_code
-    if response_status != 200:
-        print(f"API error: expected 200 but received {response_status} from server")
-        return
-    response = list_all_ids.json()
-    folder_ids = get_object_ids(response, target_dir_name, root_dir_ids, "/directory/")
-    change_dir_names(folder_ids, dir_url, cookies, headers)
+    if sys.argv[1] == 'rename':
+        list_all_ids = requests.get(
+            dir_url + '/' + root_dir_ids[target_dir_name],
+            cookies=cookies,
+            headers=headers)
+        response_status = list_all_ids.status_code
+        if response_status != 200:
+            print(f"API error: expected 200 but received {response_status} from server")
+            return
+        response = list_all_ids.json()
+        folder_ids = get_object_ids(response, target_dir_name, root_dir_ids, "/directory/")
+        #change_dir_names(folder_ids, dir_url, cookies, headers)
 
-    model_ids = get_object_ids(response, target_dir_name, root_dir_ids, "/model/")
-    change_mod_names(model_ids, mod_url, cookies, headers)
+        model_ids = get_object_ids(response, target_dir_name, root_dir_ids, "/model/")
+        #change_mod_names(model_ids, mod_url, cookies, headers)
+        print("deactivated")
+    else:
+        fetch_diagram = requests.get(
+            mod_url + '/10ac4ca1ccfc4c7cb8de451d92ba04aa/json',
+            cookies=cookies,
+            headers=headers)
+        print(fetch_diagram.text)
 
 if __name__ == "__main__":
     main()
