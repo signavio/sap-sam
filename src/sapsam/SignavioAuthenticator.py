@@ -16,10 +16,10 @@ class SignavioAuthenticator:
         data = {
             'name': email,
             'password': pw,
-            'tokenonly': 'true'
+            'tokenonly': 'true',
+            'tenant': tenant_id
         }
-        if 'tenant_id' in locals():
-            data['tenant'] = tenant_id
+    
         # authenticate
         login_request = requests.post(login_url, data)
 

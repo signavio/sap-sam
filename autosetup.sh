@@ -17,19 +17,19 @@ min_notebook_version="7.0.6"
 # checks for pip and updates if necessary
 required_packages=$((required_packages + 1))
 echo "starting setup..."
-if pip --version &>/dev/null; then
+if pip3 --version &>/dev/null || pip --version &>/dev/null; then
     echo "      checking for pip minimum version requirement..."
-    pip_version=$(pip --version | awk '{print $2}')
+    pip_version=$(pip3 --version | awk '{print $2}')
     if [[ "$(printf '%s\n' "$min_pip_version" "$pip_version" | sort -V | head -n1)" == "$min_pip_version" ]]; then
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pip installed..."
     else
         echo "updating pip..."
-        pip install --upgrade pip
+        pip3 install --upgrade pip
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pip installed..."
     fi
     installed_packages=$((installed_packages + 1))
 else
-    echo "${RED}\xE2\x9C\x96${RESET_PRINT} pip not installed"
+    echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} pip not installed"
     echo "try installing pip with for example (on macOS): brew install pip"
     echo "exiting setup script..."
     exit 1
@@ -51,7 +51,7 @@ if command -v python &>/dev/null || command -v python3 &>/dev/null; then
     fi
     installed_packages=$((installed_packages + 1))
 else
-    echo "${RED}\xE2\x9C\x96${RESET_PRINT} python not installed"
+    echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} python not installed"
     echo "try installing python3 with for example (on macOS): brew install python3"
     echo "exiting setup script..."
     exit 1
@@ -74,7 +74,7 @@ if pip list | grep jupyter &>/dev/null; then
     echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} jupyter installed..."
     installed_packages=$((installed_packages + 1))
 else
-    echo "${RED}\xE2\x9C\x96${RESET_PRINT} jupyter not installed"
+    echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} jupyter not installed"
     echo "try installing jupyter with for example: pip install jupyter notebook"
     echo "exiting setup script..."
     exit 1
@@ -94,7 +94,7 @@ if pip list | grep notebook &>/dev/null; then
     fi
     installed_packages=$((installed_packages + 1))
 else
-    echo "${RED}\xE2\x9C\x96${RESET_PRINT} notebook not installed"
+    echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} notebook not installed"
     echo "exiting setup script..."
     exit 1
 fi
@@ -154,7 +154,7 @@ if [[ $answer == "Y" || $answer == "y" ]]; then
                     echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} $package $version installed successfully"
                 else
                     echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} $package installation failed"
-                    echo -e "exiting..."
+                    echo "exiting..."
                     exit 1
                 fi
             fi
@@ -165,7 +165,7 @@ if [[ $answer == "Y" || $answer == "y" ]]; then
                 echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} $package installed successfully"
             else
                 echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} $package installation failed"
-                echo -e "exiting..."
+                echo "exiting..."
                 exit 1
             fi
         fi
@@ -175,10 +175,10 @@ else
     exit 1
 fi
 
-# manual update necessary for pydantic 1.10.8
-echo "updating pydantic..."
-pip install -U pydantic==1.10.8 &>/dev/null
-echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pydantic update done"
+# manual update necessary for pydantic 2.5.3
+#echo "updating pydantic..."
+#pip install -U pydantic==1.10.13 &>/dev/null
+#echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pydantic update done"
 
 # kernel setup
 echo "setting kernel..."
