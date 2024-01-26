@@ -70,12 +70,11 @@ class BpmnModelParser:
         model_dict = json.loads(row_tuple.model_json)
         elements = self._get_elements_flat(model_dict)
         df = pd.DataFrame.from_records(elements)
-
+        
         if 'glossary_link_id' in df.columns:
             def convert_glossary_ids(value):
                 if pd.notna(value):
-                    value = str(value)
-                    value = value.replace("[", "")\
+                    value = str(value).replace("[", "")\
                         .replace("]", "")\
                         .replace("/glossary/", "")\
                         .replace("'", "")
@@ -111,7 +110,7 @@ class BpmnModelParser:
                 "element_id": element["resourceId"],
                 "category": element["stencil"].get("id") if "stencil" in element else None,
                 "label": element["properties"].get("name"),
-                "glossary_link_id": element.get("glossaryLinks", {}).get("name", None)
+                "glossary_link_id": str(element.get("glossaryLinks", {}).get("name", None))
             }
             if self.parse_parent:
                 record["parent"] = element.get("parent")
