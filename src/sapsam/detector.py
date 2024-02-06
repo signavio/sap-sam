@@ -7,6 +7,7 @@ from tqdm import tqdm
 def get_df_models_and_labels(df, sep_str=" "):
     df_labels = df.drop(columns="category", axis=1)
     df_labels.reset_index(inplace=True)
+    df_labels.drop(columns="glossary_link_id", axis=1, inplace=True)
     df_labels.drop(columns="element_id", axis=1, inplace=True)
     df_labels.label = df_labels.label.apply(lambda x: str(x or ''))
     df_labels.drop_duplicates(ignore_index=True, inplace=True)
