@@ -24,6 +24,13 @@ def get_object_ids(response, target_dir_name, root_dir_ids: dict, object_type: s
                 object_ids.append(dir_id)
     return object_ids
 
+def get_latest_rev(response):
+    for entry in response:
+        href = entry.get("href", "")
+        if href.startswith("/revision/"):
+            href = href.replace("/revision/", "")
+            return href
+
 def change_dir_names(folder_ids: list, dir_url, cookies, headers):
     n = 0
     for folder_id in folder_ids:
@@ -60,9 +67,9 @@ def change_mod_names(model_ids: list, mod_url, cookies, headers):
 
 def main():
     if len(sys.argv) < 2:
-        print("Script requires an argument: 'rename' or 'fetch'")
+        print("Script requires an argument: 'rename' or 'fetch' or 'conventions'")
         return
-    if sys.argv[1] == 'rename' or sys.argv[1] == 'fetch':
+    if sys.argv[1] == 'rename' or sys.argv[1] == 'fetch' or sys.argv[1] == 'conventions':
         pass
     else:
         print("Unknown argument")
@@ -71,6 +78,8 @@ def main():
     auth_data = SignavioAuthenticator.authenticate()
     dir_url = system_instance + '/p/directory'
     mod_url = system_instance + '/p/model'
+    rev_url = system_instance + '/p/revision'
+    bp_check_url = system_instance + '/p/mgeditorchecker'
     target_dir_name = "Shared documents"
     cookies = {'JSESSIONID': auth_data['jsesssion_ID'], 'LBROUTEID': auth_data['lb_route_ID']}
     headers = {'Accept': 'application/json', 'X-Signavio-ID': auth_data['auth_token']}
@@ -101,13 +110,49 @@ def main():
 
         model_ids = get_object_ids(response, target_dir_name, root_dir_ids, "/model/")
         #change_mod_names(model_ids, mod_url, cookies, headers)
-        print("deactivated")
-    else:
+        print("Function currently deactivated")
+    elif sys.argv[1] == 'fetch':
         fetch_diagram = requests.post(
-            mod_url + '/10ac4ca1ccfc4c7cb8de451d92ba04aa/syntaxchecker',
+            mod_url + '/10ac4ca1ccfc4c7cb8de451d92ba04aa/json',
             cookies=cookies,
             headers=headers)
         print(fetch_diagram.text)
+    elif sys.argv[1] == 'conventions':
+        #get_guideline_id = requests.get()
+        get_diagram_revisions = requests.get(
+            mod_url + '/10ac4ca1ccfc4c7cb8de451d92ba04aa/revisions',
+            cookies=cookies,
+            headers=headers)
+        rev_id = get_latest_rev(get_diagram_revisions.json())
+
+        get_diagram_request = requests.get(
+            rev_url + '/' + rev_id + '/json',
+            cookies=cookies,
+            headers=headers)
+
+        data = {'comments': '{}',
+                'guidelineId': '4551c2229baa4c79a151b5a0cc1010d2', #to do next, find out how to retrieve guidelineid
+                                                                    #w/o using the console
+                'name': 'Getränkebestellung',
+                'model_json': get_diagram_request.content,
+                'id': '10ac4ca1ccfc4c7cb8de451d92ba04aa',
+                'checkLinking': 'false'}
+
+        bp_check_request = requests.post(
+            bp_check_url,
+            cookies=cookies,
+            headers=headers,
+            data=data)
+
+        rep_data = bp_check_request.json().get('rep', [])
+        violations_count = {
+            'errors': len(rep_data[0].get('must', [])),
+            'warnings': len(rep_data[0].get('should', [])),
+            'info': len(rep_data[0].get('info', []))
+        }
+        print(violations_count)
+    else:
+        print("Unknown arg")
 
 if __name__ == "__main__":
     main()
