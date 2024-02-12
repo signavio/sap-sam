@@ -9,7 +9,11 @@ __MACOSX/
 /venv_sapsam
 
 # exclude sgx converter
-/sgx_converter
+/SGXConverter
+
+# exclude custom analysis
+/notebooks/4_cpo_analysis.ipynb
+/notebooks/5_pg_analysis.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

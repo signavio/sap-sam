@@ -1,5 +1,5 @@
 import json, requests
-from conf import system_instance
+from sapsam.conf import system_instance
 from sapsam.SignavioAuthenticator import SignavioAuthenticator
 
 class ImageGenerator:
