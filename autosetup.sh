@@ -44,7 +44,7 @@ if command -v python &>/dev/null || command -v python3 &>/dev/null; then
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} python3 installed..."
     else
         echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} python3 is outdated ($python3_version)"
-        echo "minimum required version: $min_python3_version"
+        echo "required stable version: $min_python3_version"
         echo "try upgrading python3 with for example (on macOS): brew upgrade python3"
         echo "exiting setup script..."
         exit 1
@@ -109,15 +109,12 @@ else
     echo "virtual environment '$venv_name' created"
 fi
 
-# activates the virtual environment for packages installation
+# activates the virtual environment for packages installation, depending on OS
 if [ "$(uname)" == "Darwin" ]; then
-    echo "macOS"
     source "$venv_name/bin/activate" &>/dev/null
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    echo "Linux"
     source "$venv_name/bin/activate" &>/dev/null
 else
-    echo "ugh"
     source "$venv_name/Scripts/activate" &>/dev/null
 fi
 
@@ -196,4 +193,3 @@ echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} kernel set"
 
 # end message
 echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} setup done"
-

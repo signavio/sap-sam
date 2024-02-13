@@ -74,16 +74,17 @@ or
 
 You need to download the [dataset](https://zenodo.org/record/7012043#.Y9jQV3bMKPo) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
 
-Primarily for macOS users, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
+For macOS and Windows users, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
 
-The script will also work on Linux or Windows with a bash emulator, albeit with possible minor variations.
-
-To run the script, go to the root of the cloned repository, then enter this line in the terminal:
+To run the script, go to the root of the cloned repository, type this line in the terminal, and press enter:
 ```shell
 ./autosetup.sh
 ```
 
-The script will verify if pre-requisite packages are installed, create the virtual environment, and install all necessary dependencies.
+> It is important to note that you should have the latest stable version of `python3` installed on your machine, and not a pre-release one. The current latest stable version is `3.11.7` (as of Feb 2024). 
+
+The script will verify if pre-requisite packages are installed, create the virtual environment, and install all necessary dependencies. Should the script throw an error, follow the instructions from the error logs the console to upgrade any missing pre-requirements manually, then relaunch the script.
+
 After executing the script, type:
 ```shell
 source venv_sapsam/bin/activate
