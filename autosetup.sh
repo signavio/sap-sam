@@ -110,7 +110,16 @@ else
 fi
 
 # activates the virtual environment for packages installation
-source "$venv_name/bin/activate" &>/dev/null
+if [ "$(uname)" == "Darwin" ]; then
+    echo "macOS"
+    source "$venv_name/bin/activate" &>/dev/null
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    echo "Linux"
+    source "$venv_name/bin/activate" &>/dev/null
+else
+    echo "ugh"
+    source "$venv_name/Scripts/activate" &>/dev/null
+fi
 
 if [ $? -ne 0 ]; then
 	echo "unable to activate virtual environment"
