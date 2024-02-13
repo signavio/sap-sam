@@ -14,6 +14,8 @@ from zipfile import ZipFile
 from pathlib import Path
 from tqdm import tqdm
 
+from sapsam.constants import *
+
 _logger = logging.getLogger(__name__)
 
 def extract_zip_file(path):
@@ -52,17 +54,17 @@ def return_directory_paths(file_path):
 def recursivly_fetch_json_paths(path):
     paths=get_directory_paths(path)
     
-    #fetch all path which lead to a JSON value file
+    # fetch all path which lead to a JSON value file
     json_value_paths = list(map(return_json_value_paths, paths))
     while False in json_value_paths:
         json_value_paths.remove(False)
         
-    #fetch all paths which lead to JSON metadata file
+    # fetch all paths which lead to JSON metadata file
     json_metadata_paths = list(map(return_json_metadata_paths, paths))
     while False in json_metadata_paths:
         json_metadata_paths.remove(False)
         
-    #fetch all paths which lead to a directory
+    # fetch all paths which lead to a directory
     directory_paths = list(map(return_directory_paths, paths))
     while False in directory_paths:
         directory_paths.remove(False)
@@ -82,8 +84,7 @@ def convert_sgx_export(path):
     all_json_value_paths, all_json_metadata_paths = recursivly_fetch_json_paths(str(path[:path.rfind("/")]+"/ExtractedSGXExport"))
     print("Found "+str(len(all_json_value_paths))+" json model files and "+str(len(all_json_metadata_paths))+" json metadata files. Loading data...")
     
-    model_json_df=pd.DataFrame(columns = ['Revision ID', 'Model ID', 'Organisation ID', 'Datetime', 'Model JSON', 'Description', 'Name', 'Type', 'Namespace'])
-    #Revision ID, Model ID, Organization ID, Datetime, Model JSON, Description, Name, Type, Namespace														
+    model_json_df=pd.DataFrame(columns = ['Revision ID', 'Model ID', 'Organisation ID', 'Datetime', 'Model JSON', 'Description', 'Name', 'Type', 'Namespace'])													
     for iloc in tqdm(range(0, len(all_json_value_paths))):
         json_value_file = open(all_json_value_paths[iloc])
         json_metadata_file = open(all_json_metadata_paths[iloc])
@@ -106,10 +107,10 @@ def convert_sgx_export(path):
     return model_json_df.reset_index(drop=True)
 
 def convert_sgx_to_csv():
-    directory_path = './../data/raw/sap_sam_2022/models/OPAL'
-    sgx_files = [filename for filename in os.listdir(directory_path) if filename.endswith('.sgx')]
-    csv_files = [filename for filename in os.listdir(directory_path) if filename.endswith('.csv')]
-    zip_exports_path = './../data/raw/sap_sam_2022/models/OPAL/zip_exports'
+    #directory_path = './../data/raw/sap_sam_2022/models/OPAL'
+    sgx_files = [filename for filename in os.listdir(DATA_DATASET) if filename.endswith('.sgx')]
+    csv_files = [filename for filename in os.listdir(DATA_DATASET) if filename.endswith('.csv')]
+    zip_exports_path = DATA_DATASET / "zip_exports"
     
     print(f'Found {len(sgx_files)} SGX files.')
     if len(sgx_files) == 0 and len(csv_files) == 0:
@@ -123,17 +124,18 @@ def convert_sgx_to_csv():
     
     for i, sgx_file in enumerate(sgx_files):
         zip_file = sgx_file.replace('.sgx', '.zip')
-        shutil.move(os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', sgx_file), os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', zip_file))
-        exported_file_name = "./../data/raw/sap_sam_2022/models/OPAL/{:04d}.csv".format(i)
+        #shutil.move(os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', sgx_file), os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', zip_file))
+        shutil.move(DATA_DATASET / sgx_file, DATA_DATASET / zip_file)
+        exported_file_name = DATA_DATASET / "{:04d}.csv".format(i)
 
-        model_json_df = convert_sgx_export(os.getcwd()+'/../data/raw/sap_sam_2022/models/OPAL/'+zip_file)
-        model_json_df.to_csv(os.path.join(os.getcwd(), exported_file_name), sep=",", index=False)
+        model_json_df = convert_sgx_export(str(DATA_DATASET / zip_file))
+        model_json_df.to_csv(exported_file_name, sep=",", index=False)
 
-        if os.path.exists("./../data/raw/sap_sam_2022/models/OPAL/ExtractedSGXExport"):
-            shutil.rmtree("./../data/raw/sap_sam_2022/models/OPAL/ExtractedSGXExport")
-        if not os.path.exists("./../data/raw/sap_sam_2022/models/OPAL/zip_exports"):
+        if os.path.exists(DATA_DATASET / "ExtractedSGXExport"):
+            shutil.rmtree(DATA_DATASET / "ExtractedSGXExport")
+        if not os.path.exists(zip_exports_path):
             os.makedirs(zip_exports_path, exist_ok=True)
-        shutil.move(os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', zip_file), os.path.join('./../data/raw/sap_sam_2022/models/OPAL/zip_exports/', zip_file))
+        shutil.move(DATA_DATASET / zip_file, zip_exports_path / zip_file)
         print('\033[92m\u2713\033[0m Conversion successful\n')
     
     print('All SGX archives succesfully converted.')
