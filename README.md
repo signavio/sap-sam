@@ -74,7 +74,9 @@ or
 
 You need to download the [dataset](https://zenodo.org/record/7012043#.Y9jQV3bMKPo) and place it into the folder `./data/raw` such that the models are in `./data/raw/sap_sam_2022/models`.
 
-For macOS and Windows users, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
+> It is also possible to run the analysis on any `.sgx` files (Signavio workspace exports). Place the files in `./data/raw/sap_sam_2022/models` and the conversion will be performed automatically.
+
+To get started on Mac or Windows, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
 
 To run the script, go to the root of the cloned repository, type this line in the terminal, and press enter:
 ```shell
@@ -117,11 +119,11 @@ conda env create -f environment-lock.yml
 
 We provide a [tutorial Jupyter Notebook](https://github.com/signavio/sap-sam/blob/main/notebooks/1_tutorial.ipynb) that illustrates the dataset format in more detail and shows how to use the csv parsers developed in `./src`.
 
-The [properties Jupyter Notebook](https://github.com/signavio/sap-sam/blob/main/notebooks/2_properties.ipynb) gives an overview of selected properties of the dataset. 
+The [properties Jupyter Notebook](https://github.com/signavio/sap-sam/blob/main/notebooks/2_properties.ipynb) gives an overview of selected properties of the dataset.
 
 ## Dataset Format
 
-The dataset contains 103 csv files with a rough size of 38 GB of process models (see modeling notations of the models below).
+The SAP-SAM dataset contains 103 csv files with a rough size of 38 GB of process models (see modeling notations of the models below).
 
 ### CSV Format
 
