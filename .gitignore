@@ -8,9 +8,6 @@ __MACOSX/
 # exclude venv setup
 /venv_sapsam
 
-# exclude sgx converter
-/SGXConverter
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
