@@ -17,7 +17,6 @@ def filter_namespaces(dataset, value=None, threshold=None):
     if 'Notation' in dataset.columns and value == "max":
         pass
     elif 'Notation' in dataset.columns and isinstance(value, str):
-        print(value)
         dataset = dataset[dataset['Notation'] == value]
         if dataset.empty:
             raise ValueError(f"Filter error: notation not included in dataset")

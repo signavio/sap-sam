@@ -20,7 +20,9 @@
         "http://www.signavio.com/stencilsets/organigram#": "Organigram",
         "http://www.signavio.com/stencilsets/processdoctemplate#": "Process Documentation Template",
         "http://www.signavio.com/stencilsets/processmap#": "Value Chain",
-        "http://b3mn.org/stencilset/chennotation#": "Chen Notation"
+        "http://b3mn.org/stencilset/chennotation#": "Chen Notation",
+        "http://www.signavio.com/stencilsets/navigationmap#": "Navigation Map",
+        "Unknown": "Unknown"
     },
     "element_type_low_level": {
         "BPMNDiagram": "Diagram",

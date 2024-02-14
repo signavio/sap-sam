@@ -107,7 +107,6 @@ def convert_sgx_export(path):
     return model_json_df.reset_index(drop=True)
 
 def convert_sgx_to_csv():
-    #directory_path = './../data/raw/sap_sam_2022/models/OPAL'
     sgx_files = [filename for filename in os.listdir(DATA_DATASET) if filename.endswith('.sgx')]
     csv_files = [filename for filename in os.listdir(DATA_DATASET) if filename.endswith('.csv')]
     zip_exports_path = DATA_DATASET / "zip_exports"
@@ -123,8 +122,8 @@ def convert_sgx_to_csv():
         print('Starting conversion...\n')
     
     for i, sgx_file in enumerate(sgx_files):
+        print(f'Converting file {i + 1}/{len(sgx_files)}...')
         zip_file = sgx_file.replace('.sgx', '.zip')
-        #shutil.move(os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', sgx_file), os.path.join('./../data/raw/sap_sam_2022/models/OPAL/', zip_file))
         shutil.move(DATA_DATASET / sgx_file, DATA_DATASET / zip_file)
         exported_file_name = DATA_DATASET / "{:04d}.csv".format(i)
 
