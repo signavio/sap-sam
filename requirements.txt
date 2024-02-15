@@ -10,6 +10,6 @@ tqdm==4.66.2
 thinc==8.2.3
 spacy==3.7.3
 stringcase==1.2.0
-ipykernel==6.29.1
+ipykernel==6.29.2
 pydantic==2.6.1
 spacy_langdetect==0.1.2
