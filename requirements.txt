@@ -8,7 +8,7 @@ wordcloud==1.9.3
 language-data==1.1
 tqdm==4.66.2
 thinc==8.2.3
-spacy==3.7.3
+spacy==3.7.4
 stringcase==1.2.0
 ipykernel==6.29.2
 pydantic==2.6.1
