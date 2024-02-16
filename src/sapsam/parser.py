@@ -30,6 +30,9 @@ def parse_csv_raw(csv_path: Path, **kwargs):
     assert not df["namespace"].isna().any(), "csv has NA namespace entries, this should not happen."
     return df
 
+def parse_csv_one_line(csv_path):
+    df = (pd.read_csv(csv_path, nrows=1))
+    return df
 
 def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
     if csv_paths is None:
@@ -48,10 +51,12 @@ class BpmnModelParser:
         self.parse_outgoing = parse_outgoing
         self.parse_parent = parse_parent
 
-    def parse_model_elements(self, csv_paths=None) -> pd.DataFrame:
+    def parse_model_elements(self, flag=None, csv_paths=None) -> pd.DataFrame:
         if csv_paths is None:
             csv_paths = get_csv_paths()
-        _logger.info("Starting to parse %d cvs", len(csv_paths))
+        if flag == '1':
+            return parse_csv_one_line(csv_paths[0])
+        _logger.info("Starting to parse %d csv", len(csv_paths))
         dfs = [self._parse_bpmn_model_elements_csv(p) for p in tqdm(csv_paths)]
         df = pd.concat(dfs)
         return df
