@@ -13,6 +13,26 @@ def filter_example_processes(dataset):
     dataset = dataset[~dataset["name"].isin(example_names)]
     return dataset
 
+def filter_example_processes_bpmn(dataset):
+#     with open("../src/sapsam/prefilled_example_processes.json") as data_file:
+#         examples = json.load(data_file)
+
+#     dataset_size = len(dataset.index.get_level_values('model_id').unique())
+#     example_names = []
+#     for batch in examples["example_processes"]:
+#         example_names.extend(batch["content"])
+#     example_names = set(example_names)
+
+#     for model_id, element_id in dataset.index:
+#         name = dataset.loc[(model_id, element_id), 'name']
+#         if name in example_names:
+#             dataset.drop((model_id, element_id), inplace=True)
+    
+#     index = dataset.index.get_level_values('model_id')
+#     print(f'Dataset has been filtered down to {index.nunique()} models, or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
+    
+    return dataset
+
 def filter_namespaces(dataset, value=None, threshold=None):
     if 'Notation' in dataset.columns and value == "max":
         pass
@@ -39,17 +59,33 @@ def filter_namespaces(dataset, value=None, threshold=None):
     return dataset
 
 def filter_models(dataset, value=None):
-    # looks for childshapes
-    # if less than 'value' child shapes, remove model from the dataset
-    # check for task, start event, end event
-    # for each childshape found
-        # id == task,start event, end event
-    # if less than value childshapes, we remove it
-        print(value)
-        return dataset
+    dataset_size = len(dataset.index.get_level_values('model_id').unique())
+
+    print(f'Filtering out models with less than {value} elements...')
+    elements_nb_per_model = dataset.groupby(level='model_id').size()
+    valid_models = elements_nb_per_model[elements_nb_per_model >= value].index
+    print(f'Keeping {len(valid_models)} out of {dataset_size} from the dataset')
+    dataset = dataset.loc[valid_models]
+    dataset.reset_index(inplace=True)
+
+    print('Filtering models with no start, end, or task elements...')
+    valid_models_too = []
+    for model_id, group in dataset.groupby('model_id'):
+        if (group['category'].eq('EndNoneEvent').any() and
+            group['category'].eq('Task').any() and
+            group['category'].eq('StartNoneEvent').any()):
+            valid_models_too.append(model_id)
+    print(f'Keeping {len(valid_models_too)} out of {len(valid_models)} from the dataset')
+    dataset.set_index(['model_id', 'element_id'], inplace=True)
+    dataset = dataset.loc[valid_models_too]
+    index = dataset.index.get_level_values('model_id')
+    
+    print(f'Dataset has been filtered down to {index.nunique()} models, or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
+    return dataset
 
 filters = {
     'example_processes': filter_example_processes,
+    'example_processes_bpmn': filter_example_processes_bpmn,
     'namespaces': filter_namespaces,
     'models': filter_models
 }
@@ -65,6 +101,8 @@ class DataFilter:
     def filter_data(self, filter_key: str, value=None, threshold=None):
         if filter_key in filters:
             if filter_key == "example_processes":
+                return filters[filter_key](self.dataset)
+            elif filter_key == "example_processes_bpmn":
                 return filters[filter_key](self.dataset)
             elif filter_key == "namespaces":
                 if value is None:
@@ -82,5 +120,6 @@ class DataFilter:
             raise ValueError(f"Invalid filter key: {filter_key}\n\
 Available filters:\n\
     - example_processes\n\
+    - example_processes_bpmn\n\
     - namespaces <value> (optional) <threshold>\n\
     - models (for BPMN diagrams)")
