@@ -38,9 +38,20 @@ def filter_namespaces(dataset, value=None, threshold=None):
     dataset = dataset.reset_index(drop=True)
     return dataset
 
+def filter_models(dataset, value=None):
+    # looks for childshapes
+    # if less than 'value' child shapes, remove model from the dataset
+    # check for task, start event, end event
+    # for each childshape found
+        # id == task,start event, end event
+    # if less than value childshapes, we remove it
+        print(value)
+        return dataset
+
 filters = {
     'example_processes': filter_example_processes,
     'namespaces': filter_namespaces,
+    'models': filter_models
 }
 
 class DataFilter:
@@ -57,12 +68,19 @@ class DataFilter:
                 return filters[filter_key](self.dataset)
             elif filter_key == "namespaces":
                 if value is None:
-                    raise ValueError(f"Namespaces filter requires at least one argument")
+                    raise ValueError("Namespaces filter requires at least one argument")
                 elif value is not None:
                     return filters[filter_key](self.dataset, value, threshold)
+            elif filter_key == "models":
+                if value is None:
+                    raise ValueError("Model filter requires one argument")
+                elif 'element_id' not in self.dataset.index.names:
+                    raise ValueError("Dataset doesn't contain any JSON models")
+                elif value is not None:
+                    return filters[filter_key](self.dataset, value)
         else:
             raise ValueError(f"Invalid filter key: {filter_key}\n\
 Available filters:\n\
     - example_processes\n\
     - namespaces <value> (optional) <threshold>\n\
-    - empty_models")
+    - models (for BPMN diagrams)")
