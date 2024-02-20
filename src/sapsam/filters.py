@@ -14,23 +14,29 @@ def filter_example_processes(dataset):
     return dataset
 
 def filter_example_processes_bpmn(dataset):
-#     with open("../src/sapsam/prefilled_example_processes.json") as data_file:
-#         examples = json.load(data_file)
+    with open("../src/sapsam/prefilled_example_processes.json") as data_file:
+        examples = json.load(data_file)
 
-#     dataset_size = len(dataset.index.get_level_values('model_id').unique())
-#     example_names = []
-#     for batch in examples["example_processes"]:
-#         example_names.extend(batch["content"])
-#     example_names = set(example_names)
+    dataset_size = len(dataset.index.get_level_values('model_id').unique())
+    example_names = []
+    for batch in examples["example_processes"]:
+        example_names.extend(batch["content"])
+    example_names = set(example_names)
 
-#     for model_id, element_id in dataset.index:
-#         name = dataset.loc[(model_id, element_id), 'name']
-#         if name in example_names:
-#             dataset.drop((model_id, element_id), inplace=True)
+    print('Filtering out example processes models...')
+    dataset.reset_index(inplace=True)
+    valid_models = []
+    for model_id, group in dataset.groupby('model_id'):
+        if not group['name'].isin(example_names).all():
+           valid_models.append(model_id)
     
-#     index = dataset.index.get_level_values('model_id')
-#     print(f'Dataset has been filtered down to {index.nunique()} models, or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
+    print(f'Keeping {len(valid_models)} out of {dataset_size} from the dataset')
+    dataset.set_index(['model_id', 'element_id'], inplace=True)
+    dataset = dataset.loc[valid_models]
+    index = dataset.index.get_level_values('model_id')
     
+    print(f'Dataset has been filtered down to {index.nunique()} models, \
+or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.\n')
     return dataset
 
 def filter_namespaces(dataset, value=None, threshold=None):
@@ -66,21 +72,22 @@ def filter_models(dataset, value=None):
     valid_models = elements_nb_per_model[elements_nb_per_model >= value].index
     print(f'Keeping {len(valid_models)} out of {dataset_size} from the dataset')
     dataset = dataset.loc[valid_models]
-    dataset.reset_index(inplace=True)
 
-    print('Filtering models with no start, end, or task elements...')
+    print('Filtering out models with no start, end, or task elements...')
+    dataset.reset_index(inplace=True)
     valid_models_too = []
     for model_id, group in dataset.groupby('model_id'):
         if (group['category'].eq('EndNoneEvent').any() and
             group['category'].eq('Task').any() and
             group['category'].eq('StartNoneEvent').any()):
             valid_models_too.append(model_id)
-    print(f'Keeping {len(valid_models_too)} out of {len(valid_models)} from the dataset')
+    print(f'Keeping {len(valid_models_too)} out of {len(valid_models)} from the dataset\n')
     dataset.set_index(['model_id', 'element_id'], inplace=True)
     dataset = dataset.loc[valid_models_too]
     index = dataset.index.get_level_values('model_id')
     
-    print(f'Dataset has been filtered down to {index.nunique()} models, or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
+    print(f'Dataset has been filtered down to {index.nunique()} models, \
+or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
     return dataset
 
 filters = {
