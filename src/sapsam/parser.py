@@ -25,13 +25,13 @@ def parse_csv_raw(csv_path: Path, **kwargs):
         .set_index("model_id")
     )
     if df.index.duplicated().any():
-        _logger.warning("csv has %d duplicate model ids", df.index.duplicated().sum())
+        _logger.warning("Warning: CSV has %d duplicate model ids", df.index.duplicated().sum())
     assert not df["namespace"].isna().any(), "csv has NA namespace entries, this should not happen."
     return df
 
-def parse_csv_one_line(csv_path):
-    df = (pd.read_csv(csv_path, nrows=1))
-    return df
+# def parse_csv_one_line(csv_path):
+#     df = (pd.read_csv(csv_path, nrows=1))
+#     return df
 
 def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
     if csv_paths is None:
@@ -40,6 +40,16 @@ def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
 
     # exclude "Model JSON" column to speed up import and reduce memory usage
     dfs = [parse_csv_raw(p, usecols=lambda s: s != "Model JSON") for p in tqdm(csv_paths)]
+    df = pd.concat(dfs)
+    _logger.info("Parsed %d models", len(df))
+    return df
+
+def parse_model(csv_paths=None) -> pd.DataFrame:
+    if csv_paths is None:
+        csv_paths = get_csv_paths()
+    _logger.info("Starting to parse %d csv", len(csv_paths))
+
+    dfs = tqdm([parse_csv_raw(p) for p in csv_paths])
     df = pd.concat(dfs)
     _logger.info("Parsed %d models", len(df))
     return df
@@ -53,8 +63,8 @@ class BpmnModelParser:
     def parse_model_elements(self, flag=None, csv_paths=None) -> pd.DataFrame:
         if csv_paths is None:
             csv_paths = get_csv_paths()
-        if flag == '1':
-            return parse_csv_one_line(csv_paths[0])
+        #if flag == '1':
+        #    return parse_csv_one_line(csv_paths[0])
         _logger.info("Starting to parse %d csv", len(csv_paths))
         dfs = [self._parse_bpmn_model_elements_csv(p) for p in tqdm(csv_paths)]
         df = pd.concat(dfs)

@@ -62,4 +62,5 @@ def best_practices_checker(name:str, model_id: str, guideline_id: str, model_jso
         'warnings': len(rep_data[0].get('should', [])),
         'info': len(rep_data[0].get('info', []))
     }
+    time.sleep(0.8) # limitation for API calls (50/minute)
     return violations_count
