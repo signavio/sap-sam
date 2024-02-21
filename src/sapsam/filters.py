@@ -34,7 +34,6 @@ def filter_example_processes_bpmn(dataset):
     dataset.set_index(['model_id', 'element_id'], inplace=True)
     dataset = dataset.loc[valid_models]
     index = dataset.index.get_level_values('model_id')
-    
     print(f'Dataset has been filtered down to {index.nunique()} models, \
 a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.\n')
     return dataset
@@ -65,6 +64,33 @@ def filter_namespaces(dataset, value=None, threshold=None):
     return dataset
 
 def filter_models(dataset, value=None):
+    valid_start_elements = ['StartNoneEvent', 
+                            'StartMessageEvent', 
+                            'StartTimerEvent', 
+                            'StartErrorEvent',
+                            'StartCompensationEvent',
+                            'StartParallelMultipleEvent',
+                            'StartEscalationEvent',
+                            'StartConditionalEvent',
+                            'StartSignalEvent',
+                            'StartMultipleEvent']
+    
+    valid_task_elements = ['Task', 
+                           'CollapsedSubprocess', 
+                           'EventSubprocess', 
+                           'CollapsedEventSubprocess', 
+                           'Subprocess']
+    
+    valid_end_elements = ['EndNoneEvent',
+                          'EndEscalationEvent',
+                          'EndMessageEvent',
+                          'EndErrorEvent',
+                          'EndCancelEvent',
+                          'EndCompensationEvent',
+                          'EndSignalEvent',
+                          'EndMultipleEvent',
+                          'EndTerminateEvent']
+    
     dataset_size = len(dataset.index.get_level_values('model_id').unique())
 
     print(f'Filtering out models with less than {value} elements...')
@@ -77,15 +103,16 @@ def filter_models(dataset, value=None):
     dataset.reset_index(inplace=True)
     valid_models_too = []
     for model_id, group in dataset.groupby('model_id'):
-        if (group['category'].eq('EndNoneEvent').any() and
-            group['category'].eq('Task').any() and
-            group['category'].eq('StartNoneEvent').any()):
+        if (any(group['category'].eq(category).any() for category in valid_start_elements) and
+            any(group['category'].eq(category).any() for category in valid_task_elements) and
+            any(group['category'].eq(category).any() for category in valid_end_elements)):
             valid_models_too.append(model_id)
+        # else:
+        #     print(model_id)
     print(f'Keeping {len(valid_models_too)} out of {len(valid_models)} from the dataset\n')
     dataset.set_index(['model_id', 'element_id'], inplace=True)
     dataset = dataset.loc[valid_models_too]
     index = dataset.index.get_level_values('model_id')
-    
     print(f'Dataset has been filtered down to {index.nunique()} models, \
 a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
     return dataset
