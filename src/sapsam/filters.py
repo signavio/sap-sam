@@ -36,7 +36,7 @@ def filter_example_processes_bpmn(dataset):
     index = dataset.index.get_level_values('model_id')
     
     print(f'Dataset has been filtered down to {index.nunique()} models, \
-or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.\n')
+a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.\n')
     return dataset
 
 def filter_namespaces(dataset, value=None, threshold=None):
@@ -87,7 +87,7 @@ def filter_models(dataset, value=None):
     index = dataset.index.get_level_values('model_id')
     
     print(f'Dataset has been filtered down to {index.nunique()} models, \
-or a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
+a decrease of {"{:.2f}".format(100 - ((index.nunique()/dataset_size)*100))}%.')
     return dataset
 
 filters = {
