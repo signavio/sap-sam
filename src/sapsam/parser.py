@@ -18,7 +18,6 @@ def get_csv_paths(ds_root=DATA_DATASET) -> List[Path]:
     _logger.info("Found %d csvs", len(paths))
     return paths
 
-
 def parse_csv_raw(csv_path: Path, **kwargs):
     df = (
         pd.read_csv(csv_path, dtype={"Type": "category", "Namespace": "category"}, **kwargs)
