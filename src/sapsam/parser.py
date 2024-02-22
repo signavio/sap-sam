@@ -11,7 +11,6 @@ from sapsam.constants import BPMN2_NAMESPACE, DATA_DATASET
 
 _logger = logging.getLogger(__name__)
 
-
 def get_csv_paths(ds_root=DATA_DATASET) -> List[Path]:
     paths = sorted(ds_root.glob("*.csv"))
     assert len(paths) > 0, f"Could not find any csv in {ds_root.absolute()}, have you downloaded the dataset?"
@@ -28,10 +27,6 @@ def parse_csv_raw(csv_path: Path, **kwargs):
         _logger.warning("Warning: CSV has %d duplicate model ids", df.index.duplicated().sum())
     assert not df["namespace"].isna().any(), "csv has NA namespace entries, this should not happen."
     return df
-
-# def parse_csv_one_line(csv_path):
-#     df = (pd.read_csv(csv_path, nrows=1))
-#     return df
 
 def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
     if csv_paths is None:
@@ -54,17 +49,14 @@ def parse_model(csv_paths=None) -> pd.DataFrame:
     _logger.info("Parsed %d models", len(df))
     return df
 
-
 class BpmnModelParser:
     def __init__(self, parse_outgoing=False, parse_parent=False):
         self.parse_outgoing = parse_outgoing
         self.parse_parent = parse_parent
 
-    def parse_model_elements(self, flag=None, csv_paths=None) -> pd.DataFrame:
+    def parse_model_elements(self, csv_paths=None) -> pd.DataFrame:
         if csv_paths is None:
             csv_paths = get_csv_paths()
-        #if flag == '1':
-        #    return parse_csv_one_line(csv_paths[0])
         _logger.info("Starting to parse %d csv", len(csv_paths))
         dfs = [self._parse_bpmn_model_elements_csv(p) for p in tqdm(csv_paths)]
         df = pd.concat(dfs)
