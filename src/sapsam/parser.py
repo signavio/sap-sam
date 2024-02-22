@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from collections import deque
@@ -7,7 +8,7 @@ from typing import List, Dict
 import pandas as pd
 from tqdm import tqdm
 
-from sapsam.constants import BPMN2_NAMESPACE, DATA_DATASET
+from sapsam.constants import BPMN2_NAMESPACE, DATA_DATASET, DATA_CONVENTIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +49,13 @@ def parse_model(csv_paths=None) -> pd.DataFrame:
     df = pd.concat(dfs)
     _logger.info("Parsed %d models", len(df))
     return df
+
+def parse_conventions() -> pd.DataFrame:
+    if os.path.exists(DATA_CONVENTIONS / 'conventions.csv'):
+        df = pd.read_csv(DATA_CONVENTIONS / 'conventions.csv')
+        return df
+    else:
+        raise ValueError("No conventions file found")
 
 class BpmnModelParser:
     def __init__(self, parse_outgoing=False, parse_parent=False):

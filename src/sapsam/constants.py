@@ -3,6 +3,7 @@ from pathlib import Path
 PROJECT_ROOT: Path = Path(__file__).parents[2].resolve()
 DATA_ROOT = PROJECT_ROOT / "data"
 DATA_RAW = DATA_ROOT / "raw"
+DATA_CONVENTIONS = DATA_RAW / "sap_sam_2022" / "conventions"
 DATA_DATASET = DATA_RAW / "sap_sam_2022" / "models"
 DATA_INTERIM = DATA_ROOT / "interim"
 SRC_ROOT = PROJECT_ROOT / "src" / "sapsam"

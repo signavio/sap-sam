@@ -3,6 +3,7 @@ import time
 from sapsam.SignavioAuthenticator import *
 from urllib.parse import urlparse
 from sapsam.conf import *
+import json
 
 def get_latest_rev(response):
     for entry in response:
@@ -49,7 +50,7 @@ def syntax_checker(model_json):
         'warnings': rep_data[0].get('should', []),
     }
     time.sleep(0.8) # limitation for API calls (50/minute)
-    return syntax_errors
+    return json.dumps(syntax_errors)
     
 
 def bp_conventions_checker(name:str, model_id: str, guideline_id: str, model_json):
@@ -104,4 +105,4 @@ def bp_conventions_checker(name:str, model_id: str, guideline_id: str, model_jso
         'info': len(rep_data[0].get('info', []))
     }
     time.sleep(0.8) # limitation for API calls (50/minute)
-    return violations_count
+    return json.dumps(violations_count)
