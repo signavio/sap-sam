@@ -81,7 +81,7 @@ def convert_sgx_export(path):
     print("Zip extracted to path "+str(path[:path.rfind("/")]+"/ExtractedSGXExport"))
     
     print("Starting to get file paths...")
-    all_json_value_paths, all_json_metadata_paths = tqdm(recursivly_fetch_json_paths(str(path[:path.rfind("/")]+"/ExtractedSGXExport")), desc='Processing')
+    all_json_value_paths, all_json_metadata_paths = recursivly_fetch_json_paths(str(path[:path.rfind("/")]+"/ExtractedSGXExport"))
     print("Found "+str(len(all_json_value_paths))+" json model files and "+str(len(all_json_metadata_paths))+" json metadata files. Loading data...")
     
     model_json_df=pd.DataFrame(columns = ['Revision ID', 'Model ID', 'Organisation ID', 'Datetime', 'Model JSON', 'Description', 'Name', 'Type', 'Namespace'])													
