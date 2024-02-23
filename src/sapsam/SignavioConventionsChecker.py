@@ -12,8 +12,8 @@ def get_latest_rev(response):
             href = href.replace("/revision/", "")
             return href
 
-def syntax_checker(model_json):
-    auth_data = SignavioAuthenticator.authenticate()
+def syntax_checker(model_json, auth_data):
+    #auth_data = SignavioAuthenticator.authenticate()
     syntax_check_url = system_instance + '/p/syntaxchecker'
     cookies = {'JSESSIONID': auth_data['jsesssion_ID'], 'LBROUTEID': auth_data['lb_route_ID']}
     headers = {'Accept': 'application/json', 'X-Signavio-ID': auth_data['auth_token']}
@@ -53,8 +53,8 @@ def syntax_checker(model_json):
     return json.dumps(syntax_errors)
     
 
-def bp_conventions_checker(name:str, model_id: str, guideline_id: str, model_json):
-    auth_data = SignavioAuthenticator.authenticate()
+def bp_conventions_checker(name:str, model_id: str, guideline_id: str, model_json, auth_data):
+    #auth_data = SignavioAuthenticator.authenticate()
     bp_check_url = system_instance + '/p/mgeditorchecker'
     cookies = {'JSESSIONID': auth_data['jsesssion_ID'], 'LBROUTEID': auth_data['lb_route_ID']}
     headers = {'Accept': 'application/json', 'X-Signavio-ID': auth_data['auth_token']}
