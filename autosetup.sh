@@ -175,6 +175,8 @@ if [[ $answer == "Y" || $answer == "y" ]]; then
                 exit 1
             fi
         fi
+    #echo "updating pip..."
+    #pip install --upgrade pip
     done < requirements.txt
 else
     echo "exiting setup script..."

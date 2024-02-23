@@ -1,6 +1,7 @@
+pip==24.0
 matplotlib==3.8.3
 pillow==10.2.0
-pandas==1.5.3
+pandas==2.2.0
 numpy==1.26.4
 toml==0.10.2
 seaborn==0.13.2
@@ -13,3 +14,4 @@ stringcase==1.2.0
 ipykernel==6.29.2
 pydantic==2.6.1
 spacy_langdetect==0.1.2
+pyarrow==15.0.0
