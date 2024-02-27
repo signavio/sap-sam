@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from collections import deque
@@ -7,10 +8,9 @@ from typing import List, Dict
 import pandas as pd
 from tqdm import tqdm
 
-from sapsam.constants import BPMN2_NAMESPACE, DATA_DATASET
+from sapsam.constants import BPMN2_NAMESPACE, DATA_DATASET, DATA_CONVENTIONS
 
 _logger = logging.getLogger(__name__)
-
 
 def get_csv_paths(ds_root=DATA_DATASET) -> List[Path]:
     paths = sorted(ds_root.glob("*.csv"))
@@ -25,12 +25,8 @@ def parse_csv_raw(csv_path: Path, **kwargs):
         .set_index("model_id")
     )
     if df.index.duplicated().any():
-        _logger.warning("csv has %d duplicate model ids", df.index.duplicated().sum())
+        _logger.warning("Warning: CSV has %d duplicate model ids", df.index.duplicated().sum())
     assert not df["namespace"].isna().any(), "csv has NA namespace entries, this should not happen."
-    return df
-
-def parse_csv_one_line(csv_path):
-    df = (pd.read_csv(csv_path, nrows=1))
     return df
 
 def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
@@ -44,17 +40,31 @@ def parse_model_metadata(csv_paths=None) -> pd.DataFrame:
     _logger.info("Parsed %d models", len(df))
     return df
 
+def parse_model(csv_paths=None) -> pd.DataFrame:
+    if csv_paths is None:
+        csv_paths = get_csv_paths()
+    _logger.info("Starting to parse %d csv", len(csv_paths))
+
+    dfs = tqdm([parse_csv_raw(p) for p in csv_paths])
+    df = pd.concat(dfs)
+    _logger.info("Parsed %d models", len(df))
+    return df
+
+def parse_conventions() -> pd.DataFrame:
+    if os.path.exists(DATA_CONVENTIONS / 'conventions.csv'):
+        df = pd.read_csv(DATA_CONVENTIONS / 'conventions.csv')
+        return df
+    else:
+        raise ValueError("No conventions file found")
 
 class BpmnModelParser:
     def __init__(self, parse_outgoing=False, parse_parent=False):
         self.parse_outgoing = parse_outgoing
         self.parse_parent = parse_parent
 
-    def parse_model_elements(self, flag=None, csv_paths=None) -> pd.DataFrame:
+    def parse_model_elements(self, csv_paths=None) -> pd.DataFrame:
         if csv_paths is None:
             csv_paths = get_csv_paths()
-        if flag == '1':
-            return parse_csv_one_line(csv_paths[0])
         _logger.info("Starting to parse %d csv", len(csv_paths))
         dfs = [self._parse_bpmn_model_elements_csv(p) for p in tqdm(csv_paths)]
         df = pd.concat(dfs)

@@ -69,7 +69,7 @@ def recursivly_fetch_json_paths(path):
     while False in directory_paths:
         directory_paths.remove(False)
         
-    if(len(directory_paths)>0):
+    if len(directory_paths) > 0:
         for directory_path in directory_paths:
             json_value_paths.extend(recursivly_fetch_json_paths(directory_path)[0])
             json_metadata_paths.extend(recursivly_fetch_json_paths(directory_path)[1])

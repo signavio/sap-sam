@@ -1,5 +1,5 @@
 import requests
-from conf import *
+from sapsam.conf import *
 
 class SignavioAuthenticator:
     """
