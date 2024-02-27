@@ -1,7 +1,7 @@
 pip==24.0
 matplotlib==3.8.3
 pillow==10.2.0
-pandas==2.2.0
+pandas==2.2.1
 numpy==1.26.4
 toml==0.10.2
 seaborn==0.13.2
