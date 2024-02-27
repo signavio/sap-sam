@@ -138,7 +138,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Private conventions analysis
+# Private notebooks
+3_images_and_XMLs_private.ipynb
 4_conventions_private.ipynb
 
 # SAP-SAM Signavio API configuration
