@@ -6,6 +6,7 @@ class ImageGenerator:
     """
     Class that generates images based on JSON or XML representations
     """
+    
 
     def _delete_diagram(self, id: str):
         """Deletes a diagram in a SAP Signavio Process Manager workspace (by ID)
@@ -18,6 +19,23 @@ class ImageGenerator:
         cookies = {'JSESSIONID': auth_data['jsesssion_ID'], 'LBROUTEID': auth_data['lb_route_ID']}
         headers = {'Accept': 'application/json', 'x-signavio-id':  auth_data['auth_token']}
         requests.delete(f'{model_url}/{id}', cookies=cookies, headers=headers)
+    
+    def _get_dir_id(self, meta_request):
+        """Retrieves the directory ID where the SAP-SAM folder will be stored. If possible,
+        'My documents' will be used, and if not, we use 'Shared documents'.
+        
+        Returns:
+            str: Directory ID
+        """
+        for dir in meta_request.json():
+            if dir['rel'] == 'dir':
+                name = dir['rep']['name']
+                if name == 'My documents':
+                    my_docs_id = dir['href'].replace('/directory/', '')
+                    return my_docs_id
+
+        shared_docs_id = meta_request.json()[0]['href'].replace('/directory/', '')
+        return shared_docs_id
 
     def _setup_folder(self):
         """Creates a folder named 'SAP-SAM' in the 'Shared Documents' directory
@@ -34,9 +52,9 @@ class ImageGenerator:
             dir_url,
             cookies=cookies,
             headers=headers)
-        shared_docs_id = get_dir_meta_request.json()[0]['href'].replace('/directory/', '')
+        dir_id = self._get_dir_id(get_dir_meta_request)
         get_shared_docs_meta_request = requests.get(
-            f'{dir_url}/{shared_docs_id}',
+            f'{dir_url}/{dir_id}',
             cookies=cookies,
             headers=headers)
         results = get_shared_docs_meta_request.json()
@@ -52,7 +70,7 @@ class ImageGenerator:
             f'{dir_url}',
             cookies=cookies,
             headers=headers,
-            data={'name': 'SAP-SAM', 'parent': f'/directory/{shared_docs_id}'})
+            data={'name': 'SAP-SAM', 'parent': f'/directory/{dir_id}'})
             return json.loads(create_dir_request.content)['href'].replace('/directory/', '')
 
     def generate_representation(self, name, data, namespace, rep, deletes=True):

@@ -181,11 +181,6 @@ else
     exit 1
 fi
 
-# manual update necessary for pydantic 2.5.3
-#echo "updating pydantic..."
-#pip install -U pydantic==1.10.13 &>/dev/null
-#echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} pydantic update done"
-
 # kernel setup
 echo "setting kernel..."
 python3 -m ipykernel install --user --name=$kernel_name
