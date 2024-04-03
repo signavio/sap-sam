@@ -11,7 +11,7 @@ venv_name="venv_sapsam"
 kernel_name="sapsam_kernel"
 
 min_pip_version="23.3.2"
-min_python3_version="3.11.7"
+min_python3_version="3.11.6"
 min_notebook_version="7.0.6"
 
 # checks for pip and updates if necessary
@@ -40,7 +40,7 @@ required_packages=$((required_packages + 1))
 if command -v python &>/dev/null || command -v python3 &>/dev/null; then
     echo "      checking for python3 minimum version requirement..."
     python3_version=$(python3 --version | awk '{print $2}')
-    if [[ "$(printf '%s\n' "$min_python3_version" "$python3_version" | sort -V | head -n1)" == "$min_python3_version" ]]; then
+    if [[ "$(printf '%s\n' "$python3_version" "$min_python3_version" | sort -V | head -n1)" == "$min_python3_version" ]]; then
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} python3 installed..."
     else
         echo -e "${RED}\xE2\x9C\x96${RESET_PRINT} python3 is outdated ($python3_version)"
@@ -100,6 +100,11 @@ else
 fi
 
 echo -e "${GREEN}$installed_packages out of $required_packages pre-required packages installed${RESET_PRINT}"
+read -p "Do you want to proceed with setup? (Y/N): " answer
+if [[ $answer != "Y" && $answer != "y" ]]; then
+    echo "exiting setup script..."
+    exit 1
+fi
 
 # creates the virtual environment
 if [ -d "$venv_name" ]; then
