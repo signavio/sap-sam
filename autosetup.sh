@@ -82,14 +82,14 @@ fi
 
 # checks for notebook and updates if necessary
 required_packages=$((required_packages + 1))
-if pip list | grep notebook &>/dev/null; then
+if pip3 list | grep notebook &>/dev/null; then
     echo "      checking for notebook minimum version requirement..."
     notebook_version=$(jupyter --version 2>/dev/null | grep notebook | awk '{print $NF}')
     if [[ "$(printf '%s\n' "$min_notebook_version" "$notebook_version" | sort -V | head -n1)" == "$min_notebook_version" ]]; then
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} notebook installed..."
     else
         echo "updating notebook..."
-        pip install --upgrade notebook
+        pip3 install --upgrade notebook
         echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} notebook installed..."
     fi
     installed_packages=$((installed_packages + 1))
