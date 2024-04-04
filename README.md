@@ -76,28 +76,23 @@ You need to download the [dataset](https://zenodo.org/record/7012043#.Y9jQV3bMKP
 
 > It is also possible to run the analysis on any `.sgx` files (Signavio workspace exports). Place the files in `./data/raw/sap_sam_2022/models` and the conversion will be performed automatically.
 
-To get started on Mac or Windows, we provide an `autosetup.sh` file for automatic virtual environment setup with `venv`.
+To get started on Mac or Windows, we provide a dependency setup with `poetry`.
+Make sure poetry is installed on your system with `poetry --version`. If not, run `pip poetry install`.
 
-To run the script, go to the root of the cloned repository, type this line in the terminal, and press enter:
+To install the dependencies,  do  to the root of the cloned repository, type this line in the terminal, and press enter:
 ```shell
-./autosetup.sh
+poetry install
 ```
 
-> It is important to note that you should have the latest stable version of `python3` installed on your machine, and not a pre-release one. The current latest stable version is `3.11.7` (as of Feb 2024). 
+> It is important to note that you should have the latest stable version of `python` or `python3` installed on your machine, and not a pre-release one (try `python --version`). The current latest stable version is `3.12.2` (as of April 2024).
 
-The script will verify if pre-requisite packages are installed, create the virtual environment, and install all necessary dependencies. Should the script throw an error, follow the instructions from the error logs the console to upgrade any missing pre-requirements manually, then relaunch the script.
-
-After executing the script, type:
+After executing the script, you should be able to setup the kernel:
 ```shell
-source venv_sapsam/bin/activate
+python -m ipykernel install --user --name=sap-sam-kernel
 ```
-This will activate the virtual environment. To open the project, simply type:
+Then, to open the project, simply type:
 ```shell
 jupyter notebook
-```
-To exit the virtual environment after exiting jupyter notebook, type:
-```shell
-deactivate
 ```
 
 Alternatively, a **conda** setup is possible.
