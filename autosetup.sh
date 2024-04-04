@@ -11,7 +11,7 @@ venv_name="venv_sapsam"
 kernel_name="sapsam_kernel"
 
 min_pip_version="23.3.2"
-min_python3_version="3.11.6"
+min_python3_version="3.11.7"
 min_notebook_version="7.0.6"
 
 # checks for pip and updates if necessary
@@ -70,7 +70,7 @@ fi
 
 # checks for jupyter
 required_packages=$((required_packages + 1))
-if pip list | grep jupyter &>/dev/null; then
+if pip3 list | grep jupyter &>/dev/null; then
     echo -e "${GREEN}\xE2\x9C\x94${RESET_PRINT} jupyter installed..."
     installed_packages=$((installed_packages + 1))
 else
