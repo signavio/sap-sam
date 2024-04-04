@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "sap-sam"
+version = "0.1.0"
+description = ""
+authors = ["Pierre-Alexandre <pierre-alexandre.delannoy@sap.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+matplotlib = "^3.8.4"
+pillow = "^10.3.0"
+pandas = "^2.2.1"
+numpy = "^1.26.4"
+toml = "^0.10.2"
+seaborn = "^0.13.2"
+wordcloud = "^1.9.3"
+language-data = "^1.1"
+tqdm = "^4.66.2"
+thinc = "^8.2.3"
+spacy = "^3.7.4"
+stringcase = "^1.2.0"
+ipykernel = "^6.29.4"
+pydantic = "^2.6.4"
+spacy_langdetect = "^0.1.2"
+pyarrow = "^15.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
