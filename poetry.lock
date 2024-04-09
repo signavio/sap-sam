@@ -898,17 +898,21 @@ six = "*"
 
 [[package]]
 name = "language-data"
-version = "1.1"
+version = "1.2.0"
 description = "Supplementary data about languages used by the langcodes module"
 optional = false
-python-versions = ">=3.6"
+python-versions = "*"
 files = [
-    {file = "language_data-1.1-py3-none-any.whl", hash = "sha256:f7ba86fafe099ef213ef597eda483d5227b12446604a61f617122d6c925847d5"},
-    {file = "language_data-1.1.tar.gz", hash = "sha256:c1f5283c46bba68befa37505857a3f672497aba0c522b37d99367e911232455b"},
+    {file = "language_data-1.2.0-py3-none-any.whl", hash = "sha256:77d5cab917f91ee0b2f1aa7018443e911cf8985ef734ca2ba3940770f6a3816b"},
+    {file = "language_data-1.2.0.tar.gz", hash = "sha256:82a86050bbd677bfde87d97885b17566cfe75dad3ac4f5ce44b52c28f752e773"},
 ]
 
 [package.dependencies]
-marisa-trie = ">=0.7.7,<0.8.0"
+marisa-trie = ">=0.7.7"
+
+[package.extras]
+build = ["build", "twine"]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "marisa-trie"
