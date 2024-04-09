@@ -14,7 +14,7 @@ numpy = "^1.26.4"
 toml = "^0.10.2"
 seaborn = "^0.13.2"
 wordcloud = "^1.9.3"
-language-data = "^1.1"
+language-data = "^1.2"
 tqdm = "^4.66.2"
 thinc = "^8.2.3"
 spacy = "^3.7.4"
@@ -23,6 +23,7 @@ ipykernel = "^6.29.4"
 pydantic = "^2.6.4"
 spacy_langdetect = "^0.1.2"
 pyarrow = "^15.0.2"
+jupyter = "^1.0.0"
 
 
 [build-system]
