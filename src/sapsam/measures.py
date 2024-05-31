@@ -44,8 +44,8 @@ def Node_Count(df):
 # Description: Density is a structural metric that calculates the ratio of the total number of arcs to the maximum number of arcs. 
 def Density(df):
     nodes = df[df["high_level_category"] == "node"].groupby('model_id')['category'].count()
-    arcs = df[df["high_level_category"] == "arc"].groupby('model_id')['category'].count()
-    density = arcs / (nodes * (nodes - 1))
+    edge = df[df["high_level_category"] == "edge"].groupby('model_id')['category'].count()
+    density = edge / (nodes * (nodes - 1))
     density = density.reset_index(name='Density')
     return density
 
@@ -306,8 +306,8 @@ def process_user(df):
 def workload(df):
     task_df = df[df['category'].isin(['Task'])]
     workload = task_df.groupby(['model_id', 'parent']).size().reset_index(name='tasks_per_lane')
-    max_workload = workload.groupby('model_id')['tasks_per_lane'].max()
-    mean_workload = workload.groupby('model_id')['tasks_per_lane'].mean()
+    max_workload = workload.groupby('model_id')['tasks_per_lane'].max().reset_index(name='max_workload')
+    mean_workload = workload.groupby('model_id')['tasks_per_lane'].mean().reset_index(name='mean_workload')
     return max_workload, mean_workload
 
 
@@ -322,7 +322,7 @@ def business_process_autonomy(df):
     # Calculate autonomy for each model_id
     autonomy_per_model = df.groupby('model_id').apply(
         lambda group: group['external_dependency'].sum() / len(group)
-    )
+    ).reset_index(name='autonomy')
     return autonomy_per_model
 
 
@@ -344,7 +344,7 @@ def operational_cost_proportion(df):
     # Calculate the proportion for each model_id
     operational_cost_proportion = df.groupby('model_id').apply(
         lambda group: (group['is_manual'].sum() + group['is_non_value_added'].sum()) / len(group)
-    )
+    ).reset_index(name='operational_cost_proportion')
     return operational_cost_proportion
 
 
@@ -387,7 +387,7 @@ def creation_date(df):
     df = df.sort_values(by='datetime', ascending=False)
     # Ranking the models based on their creation date (0 being the most recent date)
     df['creation_date_rank'] = df['datetime'].rank(method='dense', ascending=False).astype(int) - 1
-    return df['creation_date_rank']
+    return pd.DataFrame(df['creation_date_rank']).reset_index()
 
 
 # IT Activities
