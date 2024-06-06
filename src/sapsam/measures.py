@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import networkx as nx
 
 
 # Control-Flow Complexity (CFC)
@@ -406,4 +407,197 @@ def it_activities_and_proportion(df):
     result['it_activities_proportion'] = result['it_activities'] / result['task_subprocess_count']
     
     return result
+
+
+# Cyclomatic number
+# Description: The cyclomatic number measures the number of all possible control flows in a program
+def cyclomatic_number(df):
+    nodes = df[df["high_level_category"] == "node"].groupby('model_id')['category'].count()
+    edge = df[df["high_level_category"] == "edge"].groupby('model_id')['category'].count()
+    cyclomatic_number = edge - nodes + 1
+    cyclomatic_number = cyclomatic_number.reset_index(name='Cyclomatic_Number')
+    return cyclomatic_number
+
+
+# Separability
+# Description: Indicates the degree to which a process can be separated into distinct segments or modules.
+def separability(df):
+    df = df.reset_index()
+    separability_results = []
+
+    model_ids = df['model_id'].unique()
+
+    for model_id in model_ids:
+        model_df = df[df['model_id'] == model_id]
+
+        # Create a graph
+        G = nx.Graph()
+
+        # Add nodes
+        nodes = model_df[(model_df['high_level_category'] == 'nodes')]['element_id']
+        G.add_nodes_from(nodes)
+
+        # Add edges
+        edges = model_df[model_df['high_level_category'] == 'edges']
+        for _, row in edges.iterrows():
+            source_list = row['outgoing']
+            target_list = row['ingoing']
+            for source in source_list:
+                for target in target_list:
+                    G.add_edge(source, target)
+
+        # Find cut vertices
+        cut_vertices = list(nx.articulation_points(G))
+
+        # Calculate separability as the number of cut vertices
+        separability = len(cut_vertices)
+        separability_results.append({'model_id': model_id, 'Separability': separability})
+
+    return pd.DataFrame(separability_results)
+
+
+# Nesting depth
+# Description: The nesting depth of an action is the number of decisions in the control flow that are necessary to perform this action.
+def nesting_depths(df):
+    df = df.reset_index()
+    depth_results = []
+
+    model_ids = df['model_id'].unique()
+
+    for model_id in model_ids:
+        model_df = df[df['model_id'] == model_id]
+
+        # Create a dictionary to represent the graph
+        graph = {row['element_id']: row for _, row in model_df.iterrows()}
+
+        # Identify XOR control structures (Exclusive Databased Gateway and Event-based Gateway)
+        xor_gateways = model_df[model_df['category'].isin(['Exclusive_Databased_Gateway', 'EventbasedGateway'])]['element_id'].tolist()
+
+        # Function to perform DFS and calculate nesting depth
+        def dfs_depth(node, depth, depths, visited):
+            if node in visited:
+                return
+            visited.add(node)
+            depths[node] = depth
+
+            # Check if the node exists in the graph dictionary
+            if node not in graph:
+                return
+
+            # Traverse outgoing edges
+            outgoing = graph[node]['outgoing']
+            for neighbor in outgoing:
+                if node in xor_gateways:
+                    dfs_depth(neighbor, depth + 1, depths, visited)
+                else:
+                    dfs_depth(neighbor, depth, depths, visited)
+
+        # Initialize depths dictionary
+        depths = {}
+        visited = set()
+        # Start DFS from all nodes to ensure all components are covered
+        for node in graph:
+            if node not in visited:
+                dfs_depth(node, 0, depths, visited)
+
+        # Calculate max and mean depth
+        max_depth = max(depths.values()) if depths else 0
+        mean_depth = sum(depths.values()) / len(depths) if depths else 0
+
+        depth_results.append({'model_id': model_id, 'max_depth': max_depth, 'mean_depth': mean_depth})
+
+    return pd.DataFrame(depth_results)
+
+
+# Information Exchange
+# Description: Frequent information and material exchanges between human actors
+def information_exchange(df):
+    information_exchange = df[df["category"] == "MessageFlow"].groupby('model_id')['category'].count().reset_index(name='information_exchange')
+    return information_exchange
+
+
+# Cross-Connectivity (CC)
+# Description: Measures the degree of interconnections between different elements within a process model.
+def cross_connectivity(df):
+    # Number of valid connections between nodes
+    df_cross = df[(df['high_level_category'] == 'edge') & 
+                     (df['ingoing_count'] > 0) & 
+                     (df['outgoing_count'] > 0)]
+    
+    total_connections = df_cross.groupby('model_id').size()
+
+    # Total number of nodes
+    nodes = df[df["high_level_category"] == "node"].groupby('model_id').size()
+
+    cc = total_connections / (nodes * (nodes -1))
+    cc = cc.reset_index(name='CC')
+
+    return cc
+
+# Cohesion
+# Description: Cohesion measures the degree to which activities in a business process model are related and contribute to a single task or purpose.
+# WIP -> not finished
+def cohesion(df):
+    lambda_T = df[df['category'] == 'Task'].groupby('model_id').size()
+    mu_T = df[(df['low_level_category'] == 'Data Elements') & (df['outgoing_count'] > 1)]
+
+    cohesion = lambda_T * mu_T
+    cohesion = cohesion.reset_index(name='cohesion')
+
+    return cohesion
+
+
+# Diameter
+# Description: The diameter gives the length of the longest path from a start node to an end node in the process model.
+def diameter(df):
+    df = df.reset_index()
+
+    diam_results = []
+
+    # Calculate the diameter for each model
+    for model_id, group in df.groupby('model_id'):
+        # Create a directed graph
+        G = nx.DiGraph()
+
+        # Add nodes
+        nodes = group[group["high_level_category"] == "node"]['element_id'].tolist()
+        G.add_nodes_from(nodes)
+
+        # Add edges
+        edges = group[group["high_level_category"] == "edge"]
+        for _, row in edges.iterrows():
+            ingoing = row['ingoing']
+            outgoing = row['outgoing']
+            for start in ingoing:
+                for end in outgoing:
+                    G.add_edge(start, end)
+
+        try:
+            if len(G) == 0:
+                diameter = 0
+            else:
+                # Calculate the diameter of the graph
+                if nx.is_weakly_connected(G):
+                    # Convert to undirected graph for diameter calculation
+                    undirected_G = G.to_undirected()
+                    diameter = nx.diameter(undirected_G)
+                else:
+                    # For disconnected graphs, calculate the longest shortest path
+                    longest_path = 0
+                    for source in G.nodes():
+                        for target in G.nodes():
+                            if source != target and nx.has_path(G, source, target):
+                                path_length = nx.shortest_path_length(G, source, target)
+                                if path_length > longest_path:
+                                    longest_path = path_length
+                    diameter = longest_path
+
+        except nx.NetworkXError:
+            # If the graph is empty or only has one node
+            diameter = 0
+
+        diam_results.append({'model_id': model_id, 'diameter': diameter})
+
+    return pd.DataFrame(diam_results)
+
 
