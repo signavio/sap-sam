@@ -84,15 +84,15 @@ To install the dependencies,  do  to the root of the cloned repository, type thi
 poetry install
 ```
 
-> It is important to note that you should have the latest stable version of `python` or `python3` installed on your machine, and not a pre-release one (try `python --version`). The current latest stable version is `3.12.2` (as of April 2024).
+> It is important to note that you should have the latest stable version of `python` or `python3` installed on your machine, and not a pre-release one (try `python --version`). The current latest stable version is `3.12.5` (as of August 2024).
 
 After executing the script, you should be able to setup the kernel:
 ```shell
-python -m ipykernel install --user --name=sap-sam-kernel
+poetry run python -m ipykernel install --user --name=sap-sam-kernel
 ```
 Then, to open the project, simply type:
 ```shell
-jupyter notebook
+poetry run jupyter notebook
 ```
 
 Alternatively, a **conda** setup is possible.
