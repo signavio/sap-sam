@@ -1505,17 +1505,17 @@ six = "*"
 
 [[package]]
 name = "language-data"
-version = "1.2.0"
+version = "1.4.0"
 description = "Supplementary data about languages used by the langcodes module"
 optional = false
 python-versions = "*"
 files = [
-    {file = "language_data-1.2.0-py3-none-any.whl", hash = "sha256:77d5cab917f91ee0b2f1aa7018443e911cf8985ef734ca2ba3940770f6a3816b"},
-    {file = "language_data-1.2.0.tar.gz", hash = "sha256:82a86050bbd677bfde87d97885b17566cfe75dad3ac4f5ce44b52c28f752e773"},
+    {file = "language_data-1.4.0-py3-none-any.whl", hash = "sha256:f741927c24ab14cbed2a57bc2bfe82b00cff266c427179597e8b14123364f084"},
+    {file = "language_data-1.4.0.tar.gz", hash = "sha256:800e6457e7beda781c156e02d7707e38db2ded026472e07e2c055dc8446ee574"},
 ]
 
 [package.dependencies]
-marisa-trie = ">=0.7.7"
+marisa-trie = ">=1.1.0"
 
 [package.extras]
 build = ["build", "twine"]
