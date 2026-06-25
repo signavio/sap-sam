@@ -1,6 +1,7 @@
 [![REUSE status](https://api.reuse.software/badge/github.com/signavio/sap-sam)](https://api.reuse.software/info/github.com/signavio/sap-sam)
 
 # SAP Signavio Academic Models (SAP-SAM)
+**Note:** This repository is in _archive_ mode. We do not keep the dependencies updated.
 
 This repository contains the source code for the paper `SAP Signavio Academic Models: A Large Process Model Dataset` by Diana Sola, Christian Warmuth, Bernhard Schäfer, Peyman Badakhshan, Jana-Rebecca Rehse, and Timotheus Kampik.
 
